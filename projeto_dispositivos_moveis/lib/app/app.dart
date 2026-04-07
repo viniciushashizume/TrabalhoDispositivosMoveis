@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Saúde Mental Monitor',
       theme: ThemeData(primaryColor: Colors.cyan),
-      home: const HomePage(),
+      home: const LoginScreen(),
     );
   }
 }
