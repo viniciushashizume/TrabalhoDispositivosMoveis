@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_dispositivos_moveis/app/app.dart';
+import 'package:go_router/go_router.dart';
+import 'package:projeto_dispositivos_moveis/app/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,11 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (email == 'user@example.com' && password == 'password') { //verifica se as credenciais estão corretas (futuramente colocar regex)
-                  Navigator.pushReplacement( //navega para a HomePage se o login for bem-sucedido
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()), // mudar posteriormente para a tela de checkin
-                  );
+                if (email == 'user@example.com' && password == 'password') { //teste
+                  context.go(Routes.home); 
                 }
               },
               child: const Text('Login'),
