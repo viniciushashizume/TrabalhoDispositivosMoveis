@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: () {
                 if (email == 'user@example.com' && password == 'password') { //teste
-                  context.go(Routes.home); 
+                  context.go(Routes.checkin);
                 }
               },
               child: const Text('Login'),

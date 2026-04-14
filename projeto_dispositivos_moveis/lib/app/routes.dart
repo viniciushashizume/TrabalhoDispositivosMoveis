@@ -1,7 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:projeto_dispositivos_moveis/app/app.dart';
 import 'package:projeto_dispositivos_moveis/app/login/loginscreen.dart';
-
+import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_screen.dart';
+import 'package:provider/provider.dart';
 final class Routes {
   static const login = '/login';
   static const signup = '/signup';
@@ -20,6 +21,12 @@ final routes = GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) => const HomePage(),
+    ),
+    GoRoute(
+      path: Routes.checkin,
+      builder: (context, state) => CheckinScreen(
+        checkinViewmodel: context.read(),
+      ),
     ),
   ],
 );

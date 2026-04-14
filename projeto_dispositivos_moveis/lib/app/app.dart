@@ -1,6 +1,8 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:projeto_dispositivos_moveis/app/routes.dart';
+import 'package:projeto_dispositivos_moveis/app/repositories/checkin_repository.dart';
+import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_viewmodel.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,6 +12,14 @@ class MyApp extends StatelessWidget {
     // MultiProvider prepara a base para a injeção de dependências
     return MultiProvider(
       providers: [
+        Provider<CheckinRepository>(
+          create: (context) => CheckinRepository(),
+        ),
+        ChangeNotifierProvider<CheckinViewmodel>(
+          create: (context) => CheckinViewmodel(
+            checkinRepository: context.read(),
+          ),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -35,9 +45,9 @@ class HomePage extends StatelessWidget {
       body: const Center(child: Text('Bem-vindo ao Saúde Mental Monitor!')),
     );
   }
-}*/
+}
 
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:projeto_dispositivos_moveis/app/routes.dart';
 
 class MyApp extends StatelessWidget {
@@ -63,4 +73,4 @@ class HomePage extends StatelessWidget {
       body: const Center(child: Text('Bem-vindo ao Saúde Mental Monitor!')),
     );
   }
-}
+}*/
