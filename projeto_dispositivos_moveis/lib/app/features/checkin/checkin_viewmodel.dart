@@ -3,6 +3,7 @@ import 'package:projeto_dispositivos_moveis/app/models/checkin.dart';
 import 'package:projeto_dispositivos_moveis/app/repositories/checkin_repository.dart';
 
 class CheckinViewmodel extends ChangeNotifier { //viewmodel para gerenciar o estado da tela de checkin
+  bool isLoaded = false;
   bool isSaved = false;
   bool isSaving = false;
   List<CheckIn> checkins = [];
@@ -11,7 +12,10 @@ class CheckinViewmodel extends ChangeNotifier { //viewmodel para gerenciar o est
   CheckinViewmodel({required this.checkinRepository});
 
   void load() async { //carrega os checkins da "api"
+    //isLoaded = false;
+    notifyListeners();
     checkins = await checkinRepository.loadCheckins();
+    isLoaded = true;
     notifyListeners();
   }
 
