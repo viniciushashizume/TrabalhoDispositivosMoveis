@@ -14,7 +14,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    widget.checkinViewmodel.load();
+    
+    // Diz ao Flutter para esperar a tela terminar de renderizar a primeira vez
+    // antes de pedir para a ViewModel carregar os dados e notificar a tela.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.checkinViewmodel.load();
+    });
   }
 
   String _formatarData(DateTime data) {
@@ -49,7 +54,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   padding: const EdgeInsets.all(16),
                   itemCount: vm.checkins.length,
                   // Trocado o Divider por um SizedBox para dar espaçamento entre os Cards
-                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  separatorBuilder: (_, _) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final checkin =
                         vm.checkins[vm.checkins.length -
