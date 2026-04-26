@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:projeto_dispositivos_moveis/app/features/login/loginscreen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/history/history_screen.dart';
+import 'package:projeto_dispositivos_moveis/app/features/diary/diary_screen.dart';
+import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.dart';
 
 final _rootNavigatorKey =
     GlobalKey<
@@ -14,6 +16,7 @@ final _rootNavigatorKey =
 final class Routes {
   static const login = '/login';
   static const checkin = '/checkin';
+  static const diary = '/diary';
   static const history = '/history';
 }
 
@@ -44,6 +47,12 @@ class ScaffoldWithNavBar extends StatelessWidget {
             label: 'Check-in',
           ),
           NavigationDestination(
+            // Novo item de menu
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book),
+            label: 'Diário',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.history_outlined),
             selectedIcon: Icon(Icons.history),
             label: 'Histórico',
@@ -69,7 +78,6 @@ final routes = GoRouter(
       },
       branches: [
         StatefulShellBranch(
-          //"home" --> checkin
           routes: [
             GoRoute(
               path: Routes.checkin,
@@ -78,7 +86,19 @@ final routes = GoRouter(
             ),
           ],
         ),
-        //historico
+        // ADICIONE ESTE BRANCH DO DIÁRIO:
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.diary,
+              builder: (context, state) => DiaryScreen(
+                // Como o DiaryViewModel não está no MultiProvider global,
+                // instanciamos ele aqui ou adicionamos no MultiProvider do app.dart
+                diaryViewModel: DiaryViewModel(),
+              ),
+            ),
+          ],
+        ),
         StatefulShellBranch(
           routes: [
             GoRoute(
