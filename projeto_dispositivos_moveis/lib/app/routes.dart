@@ -7,6 +7,8 @@ import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_screen.
 import 'package:projeto_dispositivos_moveis/app/features/history/history_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/diary/diary_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/features/settings/settings_screen.dart';
+import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
 
 final _rootNavigatorKey =
     GlobalKey<
@@ -18,6 +20,7 @@ final class Routes {
   static const checkin = '/checkin';
   static const diary = '/diary';
   static const history = '/history';
+  static const settings = '/settings';
 }
 
 // bottom nav bar com as opções de check-in e histórico
@@ -57,6 +60,11 @@ class ScaffoldWithNavBar extends StatelessWidget {
             selectedIcon: Icon(Icons.history),
             label: 'Histórico',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Configurações',
+          ),
         ],
       ),
     );
@@ -86,7 +94,7 @@ final routes = GoRouter(
             ),
           ],
         ),
-        
+
         // BRANCH 2: DIÁRIO (CORRIGIDO)
         StatefulShellBranch(
           routes: [
@@ -109,6 +117,16 @@ final routes = GoRouter(
                 checkinViewmodel: context.read(),
                 diaryViewModel: context.read<DiaryViewModel>(),
               ),
+            ),
+          ],
+        ),
+
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.settings,
+              builder: (context, state) =>
+                  SettingsScreen(viewModel: context.read<SettingsViewModel>()),
             ),
           ],
         ),
