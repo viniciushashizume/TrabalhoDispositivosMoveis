@@ -64,7 +64,6 @@ class ScaffoldWithNavBar extends StatelessWidget {
 }
 
 final routes = GoRouter(
-  //definição das rotas da aplicação
   navigatorKey: _rootNavigatorKey,
   initialLocation: Routes.login,
   routes: [
@@ -77,6 +76,7 @@ final routes = GoRouter(
         return ScaffoldWithNavBar(navigationShell: navigationShell);
       },
       branches: [
+        // BRANCH 1: CHECK-IN
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -86,25 +86,29 @@ final routes = GoRouter(
             ),
           ],
         ),
-        // ADICIONE ESTE BRANCH DO DIÁRIO:
+        
+        // BRANCH 2: DIÁRIO (CORRIGIDO)
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: Routes.diary,
               builder: (context, state) => DiaryScreen(
-                // Como o DiaryViewModel não está no MultiProvider global,
-                // instanciamos ele aqui ou adicionamos no MultiProvider do app.dart
-                diaryViewModel: DiaryViewModel(),
+                // Use context.read() para pegar a ViewModel que já tem o Repository
+                diaryViewModel: context.read<DiaryViewModel>(),
               ),
             ),
           ],
         ),
+
+        // BRANCH 3: HISTÓRICO
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: Routes.history,
-              builder: (context, state) =>
-                  HistoryScreen(checkinViewmodel: context.read()),
+              builder: (context, state) => HistoryScreen(
+                checkinViewmodel: context.read(),
+                diaryViewModel: context.read<DiaryViewModel>(),
+              ),
             ),
           ],
         ),

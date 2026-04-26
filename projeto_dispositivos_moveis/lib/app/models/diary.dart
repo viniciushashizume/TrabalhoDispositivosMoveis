@@ -1,19 +1,9 @@
 class Diary {
-  final String? id;
-  final String text;
-  final DateTime date;
+  final DateTime date; // Verifique se é 'date' ou 'data'
+  final String content;
 
   Diary({
-    this.id,
-    required this.text,
     required this.date,
+    required this.content,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'text': text,
-      'date': date.toIso8601String(),
-    };
-  }
 }

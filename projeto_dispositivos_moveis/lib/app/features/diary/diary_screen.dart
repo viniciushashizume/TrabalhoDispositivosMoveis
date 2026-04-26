@@ -48,7 +48,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
     if (_textController.text.trim().isEmpty) return;
 
     final diary = Diary(
-      text: _textController.text.trim(),
+      content: _textController.text.trim(),
       date: DateTime.now(),
     );
 

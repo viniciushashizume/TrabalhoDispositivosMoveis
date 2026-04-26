@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_dispositivos_moveis/app/models/diary.dart';
+import 'package:projeto_dispositivos_moveis/app/repositories/diary_repository.dart';
 
 class DiaryViewModel extends ChangeNotifier {
-  bool isSaving = false;
+  bool isLoaded = false;
   bool isSaved = false;
+  bool isSaving = false;
+  List<Diary> diaries = [];
+  final DiaryRepository diaryRepository;
+
+  DiaryViewModel({required this.diaryRepository});
+
+  void load() async {
+    isLoaded = false; // Força o loading para aparecer na tela igual no checkin
+    notifyListeners();
+    diaries = await diaryRepository.loadDiaries();
+    isLoaded = true;
+    notifyListeners();
+  }
 
   void saveDiary(Diary diary) async {
     isSaving = true;
-    isSaved = false;
     notifyListeners();
 
-    // TODO: Integração futura do backend (NLP e banco de dados).
-    await Future.delayed(const Duration(seconds: 1)); // Mock de rede
+    await diaryRepository.addDiary(diary);
 
-    isSaving = false;
     isSaved = true;
+    isSaving = false;
     notifyListeners();
-
-    // Reseta o estado para evitar disparos múltiplos de SnackBar
     isSaved = false;
+    load(); // Recarrega a lista após salvar
   }
 }

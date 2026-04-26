@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.dart'; // Importe o DiaryViewModel
 
 class HistoryScreen extends StatefulWidget {
   final CheckinViewmodel checkinViewmodel;
+  final DiaryViewModel diaryViewModel; // ADICIONE ESTA LINHA
 
-  const HistoryScreen({super.key, required this.checkinViewmodel});
+  // ATUALIZE O CONSTRUTOR PARA FICAR EXATAMENTE ASSIM:
+  const HistoryScreen({
+    super.key,
+    required this.checkinViewmodel,
+    required this.diaryViewModel, // Adicionado aqui
+  });
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -14,11 +21,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    
-    // Diz ao Flutter para esperar a tela terminar de renderizar a primeira vez
-    // antes de pedir para a ViewModel carregar os dados e notificar a tela.
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.checkinViewmodel.load();
+      widget.diaryViewModel.load(); // Aproveite e carregue o diário também
     });
   }
 
@@ -33,34 +39,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final vm = widget.checkinViewmodel;
     final theme = Theme.of(context);
 
-    return ListenableBuilder(
-      listenable: vm,
-      builder: (context, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Histórico',
-            ), //titulo que sera usado na bottom bar
-            centerTitle: true,
+    return DefaultTabController(
+      length: 2, // Duas abas: Check-ins e Diários
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Histórico'),
+          centerTitle: true,
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Check-ins', icon: Icon(Icons.check_circle_outline)),
+              Tab(text: 'Diários', icon: Icon(Icons.book_outlined)),
+            ],
           ),
-          body: (!vm.isLoaded)
-              ? const Center(child: CircularProgressIndicator())
-              : vm.checkins.isEmpty
-              ? const Center(child: Text('Nenhum registro encontrado.'))
-              : ListView.separated(
+        ),
+        body: TabBarView(
+          children: [
+            // ABA 1: Lista de Check-ins
+            ListenableBuilder(
+              listenable: widget.checkinViewmodel,
+              builder: (context, _) {
+                final vm = widget.checkinViewmodel;
+                if (!vm.isLoaded)
+                  return const Center(child: CircularProgressIndicator());
+                if (vm.checkins.isEmpty)
+                  return const Center(
+                    child: Text('Nenhum check-in encontrado.'),
+                  );
+
+                return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: vm.checkins.length,
-                  // Trocado o Divider por um SizedBox para dar espaçamento entre os Cards
                   separatorBuilder: (_, _) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
-                    final checkin =
-                        vm.checkins[vm.checkins.length -
-                            1 -
-                            index]; //lista invertida --> mostra o mais "recente" (ultima entrada) primeiro
-
+                    final checkin = vm.checkins[vm.checkins.length - 1 - index];
                     return Card(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -76,93 +89,130 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today,
-                                  size: 18,
-                                  color: theme.colorScheme.primary,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  _formatarData(checkin.data),
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            _buildHeaderCard(checkin.data, theme),
                             const Divider(height: 24),
                             _buildAtributoRow(
-                              icon: Icons.mood,
-                              label: 'Humor',
-                              value: '${checkin.humor} / 10',
-                              theme: theme,
+                              Icons.mood,
+                              'Humor',
+                              '${checkin.humor} / 10',
+                              theme,
                             ),
-                            const SizedBox(height: 8),
                             _buildAtributoRow(
-                              icon: Icons.whatshot_outlined,
-                              label: 'Estresse/Ansiedade',
-                              value: '${checkin.nivelEstresse} / 5',
-                              theme: theme,
+                              Icons.whatshot,
+                              'Estresse',
+                              '${checkin.nivelEstresse} / 5',
+                              theme,
                             ),
-                            const SizedBox(height: 8),
                             _buildAtributoRow(
-                              icon: Icons.bedtime_outlined,
-                              label: 'Horas de Sono',
-                              value: '${checkin.horasSono}h',
-                              theme: theme,
+                              Icons.bedtime,
+                              'Sono',
+                              '${checkin.horasSono}h',
+                              theme,
                             ),
-                            const SizedBox(height: 8),
                             _buildAtributoRow(
-                              icon: Icons.fitness_center,
-                              label: 'Atividade Física',
-                              value: checkin.atividadeFisica ? 'Sim' : 'Não',
-                              theme: theme,
-                            ),
-                            const SizedBox(height: 8),
-                            _buildAtributoRow(
-                              icon: Icons.people_outline,
-                              label: 'Interação Social',
-                              value: checkin.interacaoSocial,
-                              theme: theme,
+                              Icons.fitness_center,
+                              'Atividade',
+                              checkin.atividadeFisica ? 'Sim' : 'Não',
+                              theme,
                             ),
                           ],
                         ),
                       ),
                     );
                   },
-                ),
-        );
-      },
+                );
+              },
+            ),
+
+            // ABA 2: Lista de Diários
+            ListenableBuilder(
+              listenable: widget.diaryViewModel,
+              builder: (context, _) {
+                final vm = widget.diaryViewModel;
+
+                if (!vm.isLoaded) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  ); // Agora vai aparecer o loading!
+                }
+
+                if (vm.diaries.isEmpty) {
+                  return const Center(
+                    child: Text('Nenhum diário salvo ainda.'),
+                  );
+                }
+
+                return ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: vm.diaries.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    // Mostra o mais recente primeiro
+                    final diary = vm.diaries[vm.diaries.length - 1 - index];
+
+                    return Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.book),
+                        title: Text(_formatarData(diary.date)),
+                        subtitle: Text(
+                          diary.content,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  // widget para exibnir os atributos dos checkins
-  Widget _buildAtributoRow({
-    required IconData icon,
-    required String label,
-    required String value,
-    required ThemeData theme,
-  }) {
+  Widget _buildHeaderCard(DateTime data, ThemeData theme) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+        Icon(Icons.calendar_today, size: 18, color: theme.colorScheme.primary),
         const SizedBox(width: 8),
         Text(
-          '$label: ',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        Text(
-          value,
-          style: theme.textTheme.bodyMedium?.copyWith(
+          _formatarData(data),
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAtributoRow(
+    IconData icon,
+    String label,
+    String value,
+    ThemeData theme,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+          const SizedBox(width: 8),
+          Text(
+            '$label: ',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          Text(
+            value,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
