@@ -9,6 +9,8 @@ import 'package:projeto_dispositivos_moveis/app/features/diary/diary_screen.dart
 import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.dart';
 import 'package:projeto_dispositivos_moveis/app/features/settings/settings_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/features/register/register_screen.dart';
+import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
 
 final _rootNavigatorKey =
     GlobalKey<
@@ -21,6 +23,7 @@ final class Routes {
   static const diary = '/diary';
   static const history = '/history';
   static const settings = '/settings';
+  static const register = '/register';
 }
 
 // bottom nav bar com as opções de check-in e histórico
@@ -50,7 +53,6 @@ class ScaffoldWithNavBar extends StatelessWidget {
             label: 'Check-in',
           ),
           NavigationDestination(
-            // Novo item de menu
             icon: Icon(Icons.book_outlined),
             selectedIcon: Icon(Icons.book),
             label: 'Diário',
@@ -79,6 +81,13 @@ final routes = GoRouter(
       path: Routes.login,
       builder: (context, state) => const LoginScreen(),
     ),
+    // NOVA ROTA DE CADASTRO AQUI (Fora do menu de navegação)
+    GoRoute(
+      path: Routes.register,
+      builder: (context, state) => RegisterScreen(
+        registerViewModel: context.read<RegisterViewModel>(),
+      ),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return ScaffoldWithNavBar(navigationShell: navigationShell);
@@ -95,13 +104,12 @@ final routes = GoRouter(
           ],
         ),
 
-        // BRANCH 2: DIÁRIO (CORRIGIDO)
+        // BRANCH 2: DIÁRIO
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: Routes.diary,
               builder: (context, state) => DiaryScreen(
-                // Use context.read() para pegar a ViewModel que já tem o Repository
                 diaryViewModel: context.read<DiaryViewModel>(),
               ),
             ),
@@ -120,7 +128,8 @@ final routes = GoRouter(
             ),
           ],
         ),
-
+        
+        // BRANCH 4: CONFIGURAÇÕES
         StatefulShellBranch(
           routes: [
             GoRoute(

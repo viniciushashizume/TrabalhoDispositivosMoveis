@@ -6,6 +6,8 @@ import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_viewmod
 import 'package:projeto_dispositivos_moveis/app/repositories/diary_repository.dart';
 import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.dart';
 import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dart';
+import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,17 +17,18 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<CheckinRepository>(create: (context) => CheckinRepository()),
-        Provider<DiaryRepository>(
-          create: (context) => DiaryRepository(),
+        Provider<DiaryRepository>(create: (context) => DiaryRepository()),
+        Provider<UserRepository>(create: (context) => UserRepository()),
+        ChangeNotifierProvider<RegisterViewModel>(
+          create: (context) =>
+              RegisterViewModel(userRepository: context.read()),
         ),
         ChangeNotifierProvider<CheckinViewmodel>(
           create: (context) =>
               CheckinViewmodel(checkinRepository: context.read()),
         ),
         ChangeNotifierProvider<DiaryViewModel>(
-          create: (context) => DiaryViewModel(
-            diaryRepository: context.read(),
-          ),
+          create: (context) => DiaryViewModel(diaryRepository: context.read()),
         ),
         ChangeNotifierProvider<SettingsViewModel>(
           create: (context) => SettingsViewModel(),
@@ -42,11 +45,11 @@ class MyApp extends StatelessWidget {
               return MaterialApp.router(
                 debugShowCheckedModeBanner: false, // Tira a faixa de debug
                 title: 'Saúde Mental Monitor',
-                
+
                 // LÓGICA DO TEMA:
                 // Se darkModeEnabled for true, usa ThemeMode.dark, senão ThemeMode.light
-                themeMode: settingsVM.darkModeEnabled 
-                    ? ThemeMode.dark 
+                themeMode: settingsVM.darkModeEnabled
+                    ? ThemeMode.dark
                     : ThemeMode.light,
 
                 // Configuração do Tema Claro
