@@ -1,5 +1,3 @@
-# Trabalho Dispositiveis Móveis
-
 # Monitor de Saúde Mental - Projeto Dispositivos Móveis
 
 Este é um aplicativo desenvolvido em Flutter com o objetivo de auxiliar no monitoramento da saúde mental. O aplicativo permite que o usuário faça um check-in diário (registrando humor, horas de sono, nível de estresse, etc.), mantenha um diário pessoal e visualize o histórico de seus registros.
