@@ -4,13 +4,12 @@ import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.d
 
 class HistoryScreen extends StatefulWidget {
   final CheckinViewmodel checkinViewmodel;
-  final DiaryViewModel diaryViewModel; // ADICIONE ESTA LINHA
+  final DiaryViewModel diaryViewModel;
 
-  // ATUALIZE O CONSTRUTOR PARA FICAR EXATAMENTE ASSIM:
   const HistoryScreen({
     super.key,
     required this.checkinViewmodel,
-    required this.diaryViewModel, // Adicionado aqui
+    required this.diaryViewModel,
   });
 
   @override
@@ -24,7 +23,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.checkinViewmodel.load();
-      widget.diaryViewModel.load(); // Aproveite e carregue o diário também
+      widget.diaryViewModel.load();
     });
   }
 
@@ -133,7 +132,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 if (!vm.isLoaded) {
                   return const Center(
                     child: CircularProgressIndicator(),
-                  ); // Agora vai aparecer o loading!
+                  ); 
                 }
 
                 if (vm.diaries.isEmpty) {

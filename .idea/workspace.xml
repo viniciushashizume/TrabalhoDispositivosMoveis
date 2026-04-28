@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8646949f-45a3-4b1c-8219-c0a7369317bf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/app.dart" beforeDir="false" afterPath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/app.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/features/login/loginscreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/features/login/loginscreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/models/diary.dart" beforeDir="false" afterPath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/models/diary.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/routes.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projeto_dispositivos_moveis/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/projeto_dispositivos_moveis/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/features/history/history_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/projeto_dispositivos_moveis/lib/app/features/history/history_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
