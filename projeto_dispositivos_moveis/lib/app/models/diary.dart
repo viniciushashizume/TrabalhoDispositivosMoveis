@@ -1,5 +1,5 @@
 class Diary {
-  final DateTime date; // Verifique se é 'date' ou 'data'
+  final DateTime date;
   final String content;
 
   Diary({

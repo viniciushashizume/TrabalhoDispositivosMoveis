@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:projeto_dispositivos_moveis/app/features/login/loginscreen.dart';
+import 'package:projeto_dispositivos_moveis/app/features/login/login_viewmodel.dart';
 import 'package:projeto_dispositivos_moveis/app/features/checkin/checkin_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/history/history_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/diary/diary_screen.dart';
@@ -78,9 +79,11 @@ final routes = GoRouter(
   initialLocation: Routes.login,
   routes: [
     GoRoute(
-      path: Routes.login,
-      builder: (context, state) => const LoginScreen(),
-    ),
+  path: Routes.login,
+  builder: (context, state) => LoginScreen(
+    loginViewModel: context.read<LoginViewModel>(),
+  ),
+),
     // NOVA ROTA DE CADASTRO AQUI (Fora do menu de navegação)
     GoRoute(
       path: Routes.register,

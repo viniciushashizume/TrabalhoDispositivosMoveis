@@ -8,6 +8,7 @@ import 'package:projeto_dispositivos_moveis/app/features/diary/diary_viewmodel.d
 import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
 import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dart';
 import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/features/login/login_viewmodel.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<SettingsViewModel>(
           create: (context) => SettingsViewModel(),
+        ),
+        ChangeNotifierProvider<LoginViewModel>(
+          create: (context) => LoginViewModel(userRepository: context.read()),
         ),
       ],
       child: Builder(
