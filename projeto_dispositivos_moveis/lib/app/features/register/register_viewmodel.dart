@@ -5,19 +5,29 @@ import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dar
 class RegisterViewModel extends ChangeNotifier {
   bool isSaved = false;
   bool isSaving = false;
+  String? errorMessage; 
   final UserRepository userRepository;
 
   RegisterViewModel({required this.userRepository});
 
-  void saveUser(User user) async {
+  Future<void> saveUser(User user) async {
     isSaving = true;
+    errorMessage = null; 
     notifyListeners();
 
-    await userRepository.addUser(user);
+    try {
+      await userRepository.registerUser(user.email, user.password);
+      isSaved = true;
+    } catch (e) {
+      errorMessage = "Erro ao se cadastrar: ${e.toString()}";
+      print(
+        errorMessage,
+      );
+      isSaved = false;
+    }
 
-    isSaved = true;
     isSaving = false;
     notifyListeners();
-    isSaved = false; // Reseta o estado para os próximos cadastros
+    isSaved = false;
   }
 }

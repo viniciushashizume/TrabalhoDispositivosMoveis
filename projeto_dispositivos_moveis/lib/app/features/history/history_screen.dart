@@ -132,7 +132,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 if (!vm.isLoaded) {
                   return const Center(
                     child: CircularProgressIndicator(),
-                  ); 
+                  );
                 }
 
                 if (vm.diaries.isEmpty) {

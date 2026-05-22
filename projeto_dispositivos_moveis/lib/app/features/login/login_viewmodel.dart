@@ -15,22 +15,13 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final users = await userRepository.loadUsers();
-
-      bool isValid = users.any(
-        (user) => user.email == email && user.password == password, // verifica se o user existe
-      );
-
-      isLoading = false; // atualiza o estado de carregamento
-      if (!isValid) {
-        errorMessage = 'Email ou senha incorretos!'; //
-      }
-      notifyListeners(); // notifica a UI sobre as mudanças
-
-      return isValid;
+      await userRepository.loginUser(email, password);
+      isLoading = false; 
+      notifyListeners(); 
+      return true;
     } catch (e) {
       isLoading = false;
-      errorMessage = 'Ocorreu um erro ao tentar fazer o login.';
+      errorMessage = 'Email ou senha incorretos!';
       notifyListeners();
       return false;
     }

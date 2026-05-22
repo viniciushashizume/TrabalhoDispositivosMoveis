@@ -11,15 +11,17 @@ import 'package:projeto_dispositivos_moveis/app/features/register/register_viewm
 import 'package:projeto_dispositivos_moveis/app/features/login/login_viewmodel.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final UserRepository userRepository;
+
+  const MyApp({super.key, required this.userRepository});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<UserRepository>.value(value: userRepository),
         Provider<CheckinRepository>(create: (context) => CheckinRepository()),
         Provider<DiaryRepository>(create: (context) => DiaryRepository()),
-        Provider<UserRepository>(create: (context) => UserRepository()),
         ChangeNotifierProvider<RegisterViewModel>(
           create: (context) =>
               RegisterViewModel(userRepository: context.read()),
@@ -40,36 +42,27 @@ class MyApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          // O ListenableBuilder "escuta" as mudanças na SettingsViewModel
           return ListenableBuilder(
             listenable: context.watch<SettingsViewModel>(),
             builder: (context, child) {
               final settingsVM = context.read<SettingsViewModel>();
 
               return MaterialApp.router(
-                debugShowCheckedModeBanner: false, // Tira a faixa de debug
+                debugShowCheckedModeBanner: false,
                 title: 'Saúde Mental Monitor',
-
-                // LÓGICA DO TEMA:
-                // Se darkModeEnabled for true, usa ThemeMode.dark, senão ThemeMode.light
                 themeMode: settingsVM.darkModeEnabled
                     ? ThemeMode.dark
                     : ThemeMode.light,
-
-                // Configuração do Tema Claro
                 theme: ThemeData(
                   useMaterial3: true,
                   colorSchemeSeed: Colors.cyan,
                   brightness: Brightness.light,
                 ),
-
-                // Configuração do Tema Escuro
                 darkTheme: ThemeData(
                   useMaterial3: true,
                   colorSchemeSeed: Colors.cyan,
                   brightness: Brightness.dark,
                 ),
-
                 routerConfig: routes,
               );
             },
@@ -80,7 +73,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// HomePage mantida aqui temporariamente
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
