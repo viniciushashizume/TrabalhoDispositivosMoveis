@@ -2,33 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:projeto_dispositivos_moveis/app/models/checkin.dart';
 import 'package:projeto_dispositivos_moveis/app/repositories/checkin_repository.dart';
 
-class CheckinViewmodel extends ChangeNotifier { //viewmodel para gerenciar o estado da tela de checkin
+class CheckinViewmodel extends ChangeNotifier {
   bool isLoaded = false;
   bool isSaved = false;
   bool isSaving = false;
+  String? errorMessage; 
   List<CheckIn> checkins = [];
   final CheckinRepository checkinRepository;
 
   CheckinViewmodel({required this.checkinRepository});
 
-  void load() async { //carrega os checkins da "api"
-    //isLoaded = false;
-    notifyListeners();
-    checkins = await checkinRepository.loadCheckins();
-    isLoaded = true;
+  Future<void> load() async {
+    try {
+      checkins = await checkinRepository.loadCheckins();
+      isLoaded = true;
+      errorMessage = null;
+    } catch (e) {
+      errorMessage = 'Erro ao carregar dados: $e';
+    }
     notifyListeners();
   }
 
-  void saveCheckin(CheckIn checkin) async {
+  Future<void> saveCheckin(CheckIn checkin) async {
     isSaving = true;
+    errorMessage = null;
     notifyListeners();
 
-    await checkinRepository.addCheckin(checkin); //salva o checkin e espera a resposta da "api"
+    try {
+      await checkinRepository.addCheckin(checkin);
+      isSaved = true;
+    } catch (e) {
+      errorMessage = 'Erro ao guardar check-in: $e';
+      isSaved = false;
+    }
 
-    isSaved = true;
     isSaving = false;
     notifyListeners();
     isSaved = false;
-    load();
+
+    await load();
   }
 }
