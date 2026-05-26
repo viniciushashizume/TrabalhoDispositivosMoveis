@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:projeto_dispositivos_moveis/app/models/user.dart';
 import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/models/user.dart';
 import 'package:projeto_dispositivos_moveis/app/routes.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,48 +19,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    widget.registerViewModel.addListener(_onUpdate);
-  }
-
-  @override
   void dispose() {
-    widget.registerViewModel.removeListener(_onUpdate);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _onUpdate() {
-    if (widget.registerViewModel.isSaved) {
-      FocusScope.of(context).unfocus(); // Oculta o teclado
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Usuário cadastrado com sucesso!'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
-      
-      _emailController.clear();
-      _passwordController.clear();
-      
-      // Volta para a tela de login após o sucesso
-      context.go(Routes.login);
-    }
-  }
-
-  void _submitRegister() {
+  Future<void> _submitRegister() async {
     if (_formKey.currentState!.validate()) {
       final user = User(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
 
-      widget.registerViewModel.saveUser(user);
+      // Aguarda o resultado do método de salvar da ViewModel
+      final sucesso = await widget.registerViewModel.saveUser(user);
+
+      if (mounted) {
+        if (sucesso) {
+          FocusScope.of(context).unfocus();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Usuário cadastrado com sucesso!'),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+
+          _emailController.clear();
+          _passwordController.clear();
+
+          context.go(Routes.login);
+        } else {
+          // Exibe o erro caso o cadastro falhe (ex: email já existente)
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(widget.registerViewModel.errorMessage ?? 'Erro ao realizar cadastro!'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -73,10 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       listenable: vm,
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Criar Conta'),
-            centerTitle: true,
-          ),
+          appBar: AppBar(title: const Text('Criar Conta'), centerTitle: true),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
@@ -96,8 +100,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,
+                    onChanged: (_) => vm.clearEmailError(),
                     decoration: InputDecoration(
                       labelText: 'Email',
+                      errorText: vm.emailAlreadyRegistered
+                          ? 'Email já cadastrado'
+                          : null, // Mantém também a validação no campo de texto
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -105,9 +113,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Por favor, insira um email.';
-                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                      if (!emailRegex.hasMatch(value)) return 'Insira um email válido.';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira um email.';
+                      }
+
+                      final emailRegex = RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      );
+                      if (!emailRegex.hasMatch(value)) {
+                        return 'Insira um email válido.';
+                      }
+
                       return null;
                     },
                   ),
@@ -123,8 +139,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     obscureText: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Por favor, insira uma senha.';
-                      if (value.length < 6) return 'A senha deve ter no mínimo 6 caracteres.';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira uma senha.';
+                      }
+                      if (value.length < 6) {
+                        return 'A senha deve ter no mínimo 6 caracteres.';
+                      }
+
                       return null;
                     },
                   ),
@@ -133,10 +154,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: vm.isSaving ? null : _submitRegister,
                     icon: vm.isSaving
                         ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                         : const Icon(Icons.person_add_outlined),
                     label: Text(
                       vm.isSaving ? 'Salvando...' : 'Cadastrar',
@@ -153,7 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextButton(
                     onPressed: () => context.go(Routes.login),
                     child: const Text('Já tenho uma conta. Fazer login.'),
-                  )
+                  ),
                 ],
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:projeto_dispositivos_moveis/app/services/auth_service.dart';
-
+class EmailAlreadyRegisteredException implements Exception {}
 class UserRepository extends ChangeNotifier {
   final AuthService _authService;
   User? _currentUser;

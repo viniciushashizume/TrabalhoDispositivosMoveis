@@ -3,31 +3,40 @@ import 'package:projeto_dispositivos_moveis/app/models/user.dart';
 import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dart';
 
 class RegisterViewModel extends ChangeNotifier {
-  bool isSaved = false;
   bool isSaving = false;
-  String? errorMessage; 
+  bool emailAlreadyRegistered = false;
+  String? errorMessage;
   final UserRepository userRepository;
 
   RegisterViewModel({required this.userRepository});
 
-  Future<void> saveUser(User user) async {
+  Future<bool> saveUser(User user) async {
     isSaving = true;
-    errorMessage = null; 
+    emailAlreadyRegistered = false;
+    errorMessage = null;
     notifyListeners();
+
+    bool success = false;
 
     try {
       await userRepository.registerUser(user.email, user.password);
-      isSaved = true;
+      success = true;
+    } on EmailAlreadyRegisteredException {
+      emailAlreadyRegistered = true;
+      errorMessage = 'O email inserido já está cadastrado.';
     } catch (e) {
       errorMessage = "Erro ao se cadastrar: ${e.toString()}";
-      print(
-        errorMessage,
-      );
-      isSaved = false;
     }
 
     isSaving = false;
     notifyListeners();
-    isSaved = false;
+    return success; // Retorna true se deu certo, false se deu erro
+  }
+
+  void clearEmailError() {
+    if (!emailAlreadyRegistered) return;
+    emailAlreadyRegistered = false;
+    errorMessage = null;
+    notifyListeners();
   }
 }
