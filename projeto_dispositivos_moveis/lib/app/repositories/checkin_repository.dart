@@ -7,7 +7,7 @@ class CheckinRepository {
   List<CheckIn> _checkinsList = [];
 
   UnmodifiableListView<CheckIn> get checkins =>
-      UnmodifiableListView(_checkinsList);
+      UnmodifiableListView(_checkinsList); // deixa a lista para ficar apenas no modo read, sem poder ser modificada sem ser usando os metodos
 
   Future<void> addCheckin(CheckIn checkin) async {
     final user = _supabase.auth.currentUser;
@@ -19,11 +19,11 @@ class CheckinRepository {
     final data = checkin.toJson();
     data.remove(
       'id',
-    ); // remover o id nulo para o Supabase gerar um UUID automaticamente
-    data['user_id'] = user.id; //associa a submissão ao utilizador atual
+    ); // remover o id nulo para o Supabase gerar um UID automaticamente
+    data['user_id'] = user.id; //associa a submissão ao user
 
     await _supabase.from('checkins').insert(data);
-  }
+  } 
 
   Future<List<CheckIn>> loadCheckins() async {
     final user = _supabase.auth.currentUser;

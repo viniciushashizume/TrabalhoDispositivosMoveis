@@ -8,8 +8,8 @@ class UserRepository extends ChangeNotifier {
 
   UserRepository(this._authService);
 
-  bool get isUserLoggedIn => _currentUser != null;
-  User? get currentUser => _currentUser;
+  bool get isUserLoggedIn => _currentUser != null; // verfica se o user esta logado e autenticado
+  User? get currentUser => _currentUser; // retorna o user atual ou null se não houver nenhum logado
 
   Future<void> checkIfUserIsLoggedIn() async {
     _currentUser = _authService.getCurrentUser();
