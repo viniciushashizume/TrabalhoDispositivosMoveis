@@ -81,15 +81,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
+                    child: FilledButton.icon(
                       onPressed: isLoading ? null : _fazerLogin,
-                      child: isLoading
+                      icon: isLoading
                           ? const SizedBox(
-                              height: 20,
                               width: 20,
+                              height: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Text('Login'),
+                          : const Icon(Icons.login_outlined),
+                      label: Text(
+                        isLoading ? 'Entrando...' : 'Login',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),

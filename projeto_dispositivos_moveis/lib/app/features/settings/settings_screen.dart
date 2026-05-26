@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
-import 'package:projeto_dispositivos_moveis/app/routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dart';
+import 'package:projeto_dispositivos_moveis/app/routes.dart';
 
 class SettingsScreen extends StatelessWidget {
   final SettingsViewModel viewModel;
@@ -11,6 +13,8 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final userRepository = context.watch<UserRepository>();
+    final userEmail = userRepository.currentUser?.email ?? 'Email nao disponivel';
 
     return ListenableBuilder(
       listenable: viewModel,
@@ -38,13 +42,18 @@ class SettingsScreen extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.person_outline),
                 title: const Text('Perfil'),
-                subtitle: const Text('vini@email.com'),
+                subtitle: Text(userEmail),
                 onTap: () {}, // Futura implementação
               ),
               ListTile(
                 leading: Icon(Icons.logout, color: theme.colorScheme.error),
                 title: Text('Sair', style: TextStyle(color: theme.colorScheme.error)),
-                onTap: () => context.go(Routes.login),
+                onTap: () async {
+                  await userRepository.logoutUser();
+                  if (context.mounted) {
+                    context.go(Routes.login);
+                  }
+                },
               ),
             ],
           ),
