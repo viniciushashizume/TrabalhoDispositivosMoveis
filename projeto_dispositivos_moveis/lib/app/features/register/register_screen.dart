@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:projeto_dispositivos_moveis/app/models/user.dart';
 import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/models/user.dart';
 import 'package:projeto_dispositivos_moveis/app/routes.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -34,21 +34,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _onUpdate() {
     if (widget.registerViewModel.isSaved) {
-      FocusScope.of(context).unfocus(); // Oculta o teclado
-      
+      FocusScope.of(context).unfocus();
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Usuário cadastrado com sucesso!'),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),
       );
-      
+
       _emailController.clear();
       _passwordController.clear();
-      
-      // Volta para a tela de login após o sucesso
+
       context.go(Routes.login);
     }
   }
@@ -73,10 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       listenable: vm,
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Criar Conta'),
-            centerTitle: true,
-          ),
+          appBar: AppBar(title: const Text('Criar Conta'), centerTitle: true),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
@@ -96,8 +94,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,
+                    onChanged: (_) => vm.clearEmailError(),
                     decoration: InputDecoration(
                       labelText: 'Email',
+                      errorText: vm.emailAlreadyRegistered
+                          ? 'email já cadastrado'
+                          : null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -105,9 +107,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Por favor, insira um email.';
-                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                      if (!emailRegex.hasMatch(value)) return 'Insira um email válido.';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira um email.';
+                      }
+
+                      final emailRegex = RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      );
+                      if (!emailRegex.hasMatch(value)) {
+                        return 'Insira um email válido.';
+                      }
+
                       return null;
                     },
                   ),
@@ -123,8 +133,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     obscureText: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Por favor, insira uma senha.';
-                      if (value.length < 6) return 'A senha deve ter no mínimo 6 caracteres.';
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira uma senha.';
+                      }
+                      if (value.length < 6) {
+                        return 'A senha deve ter no mínimo 6 caracteres.';
+                      }
+
                       return null;
                     },
                   ),
@@ -153,7 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextButton(
                     onPressed: () => context.go(Routes.login),
                     child: const Text('Já tenho uma conta. Fazer login.'),
-                  )
+                  ),
                 ],
               ),
             ),
