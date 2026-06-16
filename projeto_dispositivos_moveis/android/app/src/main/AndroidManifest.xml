@@ -1,5 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-<uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- Permissões -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+
+    <!-- A tag application corrigida (atributos juntos da abertura) -->
     <application
         android:label="projeto_dispositivos_moveis"
         android:name="${applicationName}"
@@ -32,12 +38,15 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-    <!-- Required to query activities that can process text, see:
-         https://developer.android.com/training/package-visibility and
-         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
-         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <!-- Bloco único de queries unificando o Speech e o Flutter Text Process -->
     <queries>
+        <!-- Necessário para o Android 11 (API 30) ou superior (Speech to text) -->
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+        
+        <!-- Required to query activities that can process text (Flutter) -->
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
