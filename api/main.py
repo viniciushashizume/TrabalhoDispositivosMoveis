@@ -1,85 +1,102 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+import joblib
 import pandas as pd
+import os
+import re
+import unicodedata
 
-# Importações dos seus módulos internos
-from core.database import supabase
-from services.ml_pipeline import instanciar_e_treinar_modelo, gerar_arquivos_txt, FEATURES
+app = FastAPI(title="Saúde Mental - API NLP e Extração de Marcadores")
 
-# Variável global para manter o modelo carregado na memória RAM do servidor
-modelo_rf_cache = None
+# Modelo de entrada simplificado para focar no diário/texto
+class TextPredictionInput(BaseModel):
+    text: str
 
-def executar_pipeline_completo():
-    global modelo_rf_cache
+class PredictionResponse(BaseModel):
+    risco_predito: str
+    confianca: float
+    probabilidade_alto_risco: float
+    marcadores_identificados: List[str] 
 
-    try:
-        print("\n--- [PIPELINE] Iniciando processamento de dados ---")
+# Caminho atualizado para o novo pipeline focado em PLN
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PIPELINE_PATH = os.path.join(BASE_DIR, 'models', 'nlp_pipeline.pkl')
+pipeline = None
 
-        if modelo_rf_cache is None:
-            print("[PIPELINE] Buscando dados de treino na tabela 'checkins'...")
+# O dicionário de ALERT_KEYWORDS existente é excelente. Mantenha ele como está no seu código original.
+ALERT_KEYWORDS = {
+    "exausto": "Exaustão", "exaustao": "Exaustão", "burnout": "Risco de Burnout",
+    "ansiedade": "Ansiedade", "panico": "Crise de Pânico", "palpitacao": "Sintoma Físico (Palpitação)",
+    "triste": "Tristeza", "desespero": "Desespero", "depressao": "Depressão",
+    "morrer": "Ideação de Risco", "suicidio": "Risco Crítico", "sumir": "Ideação de Fuga"
+    # ... (manter todos os seus mapeamentos)
+}
 
-            # ATUALIZADO: Usando o .filter() cru para buscar onde NÃO É NULO
-            resposta_treino = supabase.table("checkins").select("*").filter("risco_classificado", "not.is", "null").execute()
-            df_treino = pd.DataFrame(resposta_treino.data)
+def clean_text(text: str) -> str:
+    text = str(text).lower()
+    text = "".join(c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')
+    text = re.sub(r'[^\w\s]', '', text)
+    return text
 
-            if df_treino.empty:
-                print("[ERRO] Nenhum check-in com risco previamente classificado encontrado para treinar o modelo.")
-                return
+def extract_risk_keywords(text: str) -> List[str]:
+    cleaned = clean_text(text)
+    detected = []
+    for kw, clinical_label in ALERT_KEYWORDS.items():
+        pattern = r'\b' + re.escape(clean_text(kw)) + r'\b'
+        if re.search(pattern, cleaned) or (kw in cleaned and len(kw) > 4):
+            if clinical_label not in detected:
+                detected.append(clinical_label)
+    return detected
 
-            modelo_rf_cache = instanciar_e_treinar_modelo(df_treino)
-            print("[PIPELINE] Treinamento dinâmico concluído com sucesso.")
+@app.on_event("startup")
+@app.on_event("startup")
+def load_model():
+    global pipeline
+    # ADICIONE ESTA LINHA DE DEBUG:
+    print(f"[DEBUG] O FastAPI está a procurar o modelo exatamente em:\n{os.path.abspath(PIPELINE_PATH)}")
 
-        print("[PIPELINE] Buscando novos check-ins para análise...")
+    if os.path.exists(PIPELINE_PATH):
+        try:
+            pipeline = joblib.load(PIPELINE_PATH)
+            print("[PLN] Pipeline carregado com sucesso!")
+        except Exception as e:
+            print(f"[PLN] Erro ao carregar o pipeline: {e}")
+    else:
+        print("[PLN] Atenção: Modelo não encontrado. Rode 'python train_model.py'.")
 
-        # ATUALIZADO: Usando o .filter() cru para buscar onde É NULO
-        resposta_novos = supabase.table("checkins").select("*").filter("risco_classificado", "is", "null").execute()
-        df_novos = pd.DataFrame(resposta_novos.data)
-
-        if df_novos.empty:
-            print("[PIPELINE] Nenhum check-in pendente encontrado para classificação.")
-            return
-
-        # Previsão
-        X_novos = df_novos[FEATURES]
-        previsoes = modelo_rf_cache.predict(X_novos)
-
-        # Geração de TXT
-        arquivos = gerar_arquivos_txt(df_novos, previsoes)
-        print(f"[PIPELINE] Sucesso! {len(arquivos)} relatórios gerados.")
-
-        # Atualizar o Supabase com as previsões feitas
-        for index, id_checkin in enumerate(df_novos['id']):
-            supabase.table("checkins").update({"risco_classificado": previsoes[index]}).eq("id", id_checkin).execute()
-
-    except Exception as e:
-        print(f"[ERRO NO PIPELINE] Falha: {str(e)}")
-
-# Gerenciador de ciclo de vida da API (Lifespan)
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Tudo o que for digitado aqui roda AUTOMATICAMENTE na inicialização do código Python
-    print("\n[STARTUP] Servidor Python Iniciado. Executando varredura inicial...")
-    executar_pipeline_completo()
-    yield
-    # Código que roda ao desligar o servidor (se necessário)
-    print("[SHUTDOWN] Desligando o servidor da API...")
-
-
-# Inicializa o FastAPI aplicando o ciclo de vida configurado acima
-app = FastAPI(title="API de Classificação de Risco Automatizada", lifespan=lifespan)
-
-
-@app.post("/reprocessar")
-async def endpoint_reprocessar(background_tasks: BackgroundTasks):
-    """
-    Endpoint reativo. Sempre que houver uma nova entrada no banco, 
-    este endpoint deve ser chamado para disparar a reanálise.
-    """
-    # Adiciona a tarefa para rodar de forma assíncrona em segundo plano,
-    # liberando a resposta HTTP imediatamente sem travar a aplicação cliente.
-    background_tasks.add_task(executar_pipeline_completo)
+@app.post("/predict", response_model=PredictionResponse)
+def predict_risk(data: TextPredictionInput):
+    if pipeline is None:
+        raise HTTPException(status_code=500, detail="Modelo NLP não está carregado.")
     
-    return {
-        "status": "sucesso",
-        "mensagem": "Nova entrada detectada. Reprocessamento do Random Forest disparado em segundo plano."
-    }
+    try:
+        # A predição agora recebe apenas um array ou Series contendo o texto
+        prediction = pipeline.predict([data.text])[0]
+        probabilities = pipeline.predict_proba([data.text])[0]
+        
+        is_high_risk = bool(prediction == 1)
+        prob_high_risk = float(probabilities[1])
+        prob_low_risk = float(probabilities[0])
+        
+        # O sistema de extração de marcadores continua sendo nossa salvaguarda clínica principal
+        marcadores_detectados = extract_risk_keywords(data.text)
+        
+        critical_indicators = ["Risco Crítico", "Ideação de Risco", "Ideação de Desistência", "Ideação de Fuga"]
+        has_critical = any(ind in marcadores_detectados for ind in critical_indicators)
+        
+        if has_critical:
+            is_high_risk = True
+            prob_high_risk = max(prob_high_risk, 0.95)
+            prob_low_risk = min(prob_low_risk, 0.05)
+            
+        classe_risco = "Alto Risco [ALERTA]" if is_high_risk else "Baixo Risco"
+        
+        return PredictionResponse(
+            risco_predito=classe_risco,
+            confianca=max(prob_high_risk, prob_low_risk),
+            probabilidade_alto_risco=prob_high_risk,
+            marcadores_identificados=marcadores_detectados
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro durante a análise NLP: {str(e)}")

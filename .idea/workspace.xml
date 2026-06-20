@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8646949f-45a3-4b1c-8219-c0a7369317bf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +73,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vinia\AndroidStudioProjects\TrabalhoDispositiveisMveis\api\services\models" />
+      <recent name="C:\Users\vinia\AndroidStudioProjects\TrabalhoDispositiveisMveis\api" />
+      <recent name="C:\Users\vinia\AndroidStudioProjects\TrabalhoDispositiveisMveis\api\services" />
       <recent name="C:\Users\vinia\AndroidStudioProjects\TrabalhoDispositiveisMveis\projeto_dispositivos_moveis\lib\app\features" />
       <recent name="C:\Users\vinia\AndroidStudioProjects\TrabalhoDispositiveisMveis\projeto_dispositivos_moveis\lib\app\models" />
     </key>
