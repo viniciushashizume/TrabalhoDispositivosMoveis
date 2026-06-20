@@ -1,0 +1,21 @@
+=== RELATÓRIO DE MONITORAMENTO MULTIMODAL ===
+ID Usuário: 83e37768-ae92-484f-a804-b6c2c8d17325
+ID Check-in: 91f4d31b-e353-47d0-a22f-202ea5dc6caa
+---------------------------------------------
+[1] ANÁLISE QUANTITATIVA (Check-in)
+Classificação Random Forest: Risco Moderado
+Parâmetros Analisados:
+> humor: 5
+> horasSono: 8.0
+> nivelEstresse: 3
+> atividadeFisica: False
+> interacaoSocial: 3.0
+---------------------------------------------
+[2] ANÁLISE QUALITATIVA (Diário de Humor)
+Texto Analisado: "AAAAAAAA"
+Classificação PLN: Alto Risco [ALERTA]
+Confiança: 51.2%
+Marcadores Identificados: Nenhum
+---------------------------------------------
+[3] AVALIAÇÃO CONJUNTA
+Status: RECOMENDADA ATENÇÃO CLÍNICA

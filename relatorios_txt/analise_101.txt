@@ -1,0 +1,21 @@
+=== RELATÓRIO DE MONITORAMENTO MULTIMODAL ===
+ID Usuário: paciente_ana
+ID Check-in: 101
+---------------------------------------------
+[1] ANÁLISE QUANTITATIVA (Check-in)
+Classificação Random Forest: Alto Risco [ALERTA]
+Parâmetros Analisados:
+> humor: 2
+> horasSono: 4
+> nivelEstresse: 5
+> atividadeFisica: 1
+> interacaoSocial: 2
+---------------------------------------------
+[2] ANÁLISE QUALITATIVA (Diário de Humor)
+Texto Analisado: "Estou me sentindo muito exausta com a quantidade de tarefas acumuladas hoje. Cansaco extremo."
+Classificação PLN: Alto Risco [ALERTA]
+Confiança: 54.2%
+Marcadores Identificados: Nenhum
+---------------------------------------------
+[3] AVALIAÇÃO CONJUNTA
+Status: RECOMENDADA ATENÇÃO CLÍNICA

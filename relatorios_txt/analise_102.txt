@@ -1,0 +1,21 @@
+=== RELATÓRIO DE MONITORAMENTO MULTIMODAL ===
+ID Usuário: paciente_bruno
+ID Check-in: 102
+---------------------------------------------
+[1] ANÁLISE QUANTITATIVA (Check-in)
+Classificação Random Forest: Baixo Risco [OK]
+Parâmetros Analisados:
+> humor: 5
+> horasSono: 8
+> nivelEstresse: 1
+> atividadeFisica: 4
+> interacaoSocial: 5
+---------------------------------------------
+[2] ANÁLISE QUALITATIVA (Diário de Humor)
+Texto Analisado: "Me sinto otimo hoje, produtivo e focado nas minhas tarefas diarias."
+Classificação PLN: Baixo Risco [OK]
+Confiança: 55.7%
+Marcadores Identificados: Nenhum
+---------------------------------------------
+[3] AVALIAÇÃO CONJUNTA
+Status: Monitoramento Regular
