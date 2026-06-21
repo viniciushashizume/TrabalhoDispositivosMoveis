@@ -1,11 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
+from datetime import datetime
 import joblib
 import pandas as pd
 import os
 import re
 import unicodedata
+from core.database import supabase
 
 app = FastAPI(title="Saúde Mental - API NLP e Extração de Marcadores")
 
@@ -18,6 +20,10 @@ class PredictionResponse(BaseModel):
     confianca: float
     probabilidade_alto_risco: float
     marcadores_identificados: List[str] 
+
+class MockDataConfig(BaseModel):
+    quantidade: int = 15
+    user_id: str = "00000000-0000-0000-0000-000000000001"
 
 # Caminho atualizado para o novo pipeline focado em PLN
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -64,6 +70,49 @@ def load_model():
             print(f"[PLN] Erro ao carregar o pipeline: {e}")
     else:
         print("[PLN] Atenção: Modelo não encontrado. Rode 'python train_model.py'.")
+
+@app.post("/inject-mocks")
+def inject_mocks(config: MockDataConfig):
+    frases_mockadas = [
+        "Hoje tive um dia tranquilo e consegui descansar bem.",
+        "Passei um tempo feliz com minha família e me senti acolhido.",
+        "Consegui cumprir minhas tarefas e terminei o dia em paz.",
+        "Acordei com muita ansiedade e não consegui me concentrar.",
+        "Estou sentindo uma exaustão constante, mesmo depois de dormir.",
+        "O trabalho está me consumindo e sinto que estou entrando em burnout.",
+        "Tive uma crise de pânico e fiquei com muito medo de acontecer novamente.",
+        "Minha ansiedade ficou muito forte hoje e senti o coração acelerar.",
+        "Estou enfrentando uma tristeza profunda e não tenho vontade de fazer nada.",
+        "Tenho me sentido preso em uma depressão que parece não passar.",
+        "A exaustão mental está afetando meu trabalho e meus relacionamentos.",
+        "Sinto sinais de burnout, estou irritado, cansado e sem motivação.",
+        "Passei o dia com tristeza e uma sensação forte de vazio.",
+        "A ansiedade não me deixou dormir e tive pensamentos acelerados.",
+        "Senti pânico ao sair de casa e precisei voltar imediatamente.",
+    ]
+
+    dados = [
+        {
+            "user_id": config.user_id,
+            "content": frases_mockadas[indice % len(frases_mockadas)],
+            "date": datetime.now().isoformat(),
+        }
+        for indice in range(config.quantidade)
+    ]
+
+    try:
+        resposta = supabase.table("diaries").insert(dados).execute()
+    except Exception as erro:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao inserir dados mockados no Supabase: {erro}",
+        ) from erro
+
+    return {
+        "sucesso": True,
+        "quantidade_inserida": len(dados),
+        "dados": resposta.data,
+    }
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict_risk(data: TextPredictionInput):
