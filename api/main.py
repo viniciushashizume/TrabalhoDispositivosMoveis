@@ -73,32 +73,67 @@ def load_model():
 
 @app.post("/inject-mocks")
 def inject_mocks(config: MockDataConfig):
-    frases_mockadas = [
-        "Hoje tive um dia tranquilo e consegui descansar bem.",
-        "Passei um tempo feliz com minha família e me senti acolhido.",
-        "Consegui cumprir minhas tarefas e terminei o dia em paz.",
-        "Acordei com muita ansiedade e não consegui me concentrar.",
-        "Estou sentindo uma exaustão constante, mesmo depois de dormir.",
-        "O trabalho está me consumindo e sinto que estou entrando em burnout.",
-        "Tive uma crise de pânico e fiquei com muito medo de acontecer novamente.",
-        "Minha ansiedade ficou muito forte hoje e senti o coração acelerar.",
-        "Estou enfrentando uma tristeza profunda e não tenho vontade de fazer nada.",
-        "Tenho me sentido preso em uma depressão que parece não passar.",
-        "A exaustão mental está afetando meu trabalho e meus relacionamentos.",
-        "Sinto sinais de burnout, estou irritado, cansado e sem motivação.",
-        "Passei o dia com tristeza e uma sensação forte de vazio.",
-        "A ansiedade não me deixou dormir e tive pensamentos acelerados.",
-        "Senti pânico ao sair de casa e precisei voltar imediatamente.",
+    amostras_mockadas = [
+        ("Hoje tive um dia tranquilo e consegui descansar bem.", "baixo", 0, ["bem-estar", "descanso"]),
+        ("Acordei com muita ansiedade e não consegui me concentrar.", "alto", 2, ["ansiedade", "dificuldade de concentração"]),
+        ("Passei um tempo feliz com minha família e me senti acolhido.", "baixo", 0, ["felicidade", "apoio social"]),
+        ("Estou sentindo uma exaustão constante, mesmo depois de dormir.", "alto", 2, ["exaustão", "sono não reparador"]),
+        ("Consegui cumprir minhas tarefas e terminei o dia em paz.", "baixo", 0, ["tranquilidade", "produtividade"]),
+        ("O trabalho está me consumindo e sinto que estou entrando em burnout.", "alto", 3, ["burnout", "estresse ocupacional"]),
+        ("Fiz uma caminhada, respirei ar fresco e fiquei mais animado.", "baixo", 0, ["atividade física", "ânimo"]),
+        ("Tive uma crise de pânico e fiquei com medo de acontecer novamente.", "alto", 3, ["pânico", "medo"]),
+        ("Dormi bem e acordei disposto para começar o dia.", "baixo", 0, ["sono adequado", "disposição"]),
+        ("Minha ansiedade ficou muito forte e senti o coração acelerar.", "alto", 2, ["ansiedade", "palpitação"]),
+        ("Conversei com amigos e me diverti bastante durante a tarde.", "baixo", 0, ["socialização", "felicidade"]),
+        ("Estou enfrentando uma tristeza profunda e não quero fazer nada.", "alto", 3, ["tristeza", "desmotivação"]),
+        ("Hoje fiquei um pouco cansado, mas consegui relaxar depois.", "baixo", 1, ["cansaço leve", "recuperação"]),
+        ("Tenho me sentido preso em uma depressão que parece não passar.", "alto", 3, ["depressão", "desesperança"]),
+        ("O dia foi corrido, porém consegui organizar tudo sem me desesperar.", "baixo", 1, ["estresse leve", "autorregulação"]),
+        ("A exaustão mental está afetando meu trabalho e relacionamentos.", "alto", 3, ["exaustão", "prejuízo funcional"]),
+        ("Estou contente porque consegui resolver um problema importante.", "baixo", 0, ["satisfação", "realização"]),
+        ("Sinto sinais de burnout, estou irritado, cansado e sem motivação.", "alto", 3, ["burnout", "irritabilidade", "desmotivação"]),
+        ("Tive preocupação com uma prova, mas consegui estudar e me acalmar.", "baixo", 1, ["preocupação leve", "autorregulação"]),
+        ("Passei o dia com tristeza e uma sensação forte de vazio.", "alto", 2, ["tristeza", "vazio"]),
+        ("Preparei uma refeição, cuidei de mim e tive uma noite agradável.", "baixo", 0, ["autocuidado", "bem-estar"]),
+        ("A ansiedade não me deixou dormir e tive pensamentos acelerados.", "alto", 2, ["ansiedade", "insônia", "ruminação"]),
+        ("Mesmo com pequenos problemas, consegui manter a calma hoje.", "baixo", 1, ["resiliência", "tranquilidade"]),
+        ("Senti pânico ao sair de casa e precisei voltar imediatamente.", "alto", 3, ["pânico", "evitação"]),
+        ("Recebi uma boa notícia e passei o restante do dia feliz.", "baixo", 0, ["felicidade", "otimismo"]),
+        ("Estou tão exausto que não consigo terminar tarefas simples.", "alto", 3, ["exaustão", "prejuízo funcional"]),
+        ("Senti saudade e fiquei triste por um momento, depois melhorei.", "baixo", 1, ["tristeza passageira", "recuperação"]),
+        ("A depressão tem tirado minha energia e meu interesse pelas coisas.", "alto", 3, ["depressão", "anedonia", "baixa energia"]),
+        ("Consegui descansar, ouvir música e terminar o dia mais leve.", "baixo", 0, ["relaxamento", "bem-estar"]),
+        ("Minha ansiedade virou desespero e não consigo pensar com clareza.", "alto", 3, ["ansiedade", "desespero", "confusão"]),
     ]
 
-    dados = [
-        {
-            "user_id": config.user_id,
-            "content": frases_mockadas[indice % len(frases_mockadas)],
-            "date": datetime.now().isoformat(),
-        }
-        for indice in range(config.quantidade)
+    split_por_par = [
+        "train", "train", "validation", "train", "test",
+        "train", "train", "validation", "train", "test",
+        "train", "train", "train", "train", "test",
     ]
+
+    dados = []
+    for indice in range(config.quantidade):
+        indice_amostra = indice % len(amostras_mockadas)
+        texto, risco, intensidade, categorias = amostras_mockadas[indice_amostra]
+
+        dataset_split = split_por_par[indice_amostra // 2]
+
+        dados.append({
+            "user_id": config.user_id,
+            "content": texto,
+            "date": datetime.now().isoformat(),
+            "expected_risk": risco,
+            "expected_risk_binary": 1 if risco == "alto" else 0,
+            "expected_risk_score": intensidade,
+            "expected_categories": categorias,
+            "is_synthetic": True,
+            "dataset_split": dataset_split,
+            "label_source": "mock_hardcoded_v1",
+            "label_reviewed": False,
+            "language": "pt-BR",
+            "mock_group_id": f"mock_{indice_amostra + 1:03d}",
+        })
 
     try:
         resposta = supabase.table("diaries").insert(dados).execute()
