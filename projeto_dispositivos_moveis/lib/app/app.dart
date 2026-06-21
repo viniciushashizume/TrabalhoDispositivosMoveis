@@ -9,11 +9,14 @@ import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewm
 import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dart';
 import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
 import 'package:projeto_dispositivos_moveis/app/features/login/login_viewmodel.dart';
+import 'package:go_router/go_router.dart';
 
 class MyApp extends StatelessWidget {
   final UserRepository userRepository;
+  final GoRouter router;
 
-  const MyApp({super.key, required this.userRepository});
+  MyApp({super.key, required this.userRepository})
+    : router = createRouter(userRepository);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +66,7 @@ class MyApp extends StatelessWidget {
                   colorSchemeSeed: Colors.cyan,
                   brightness: Brightness.dark,
                 ),
-                routerConfig: routes,
+                routerConfig: router,
               );
             },
           );

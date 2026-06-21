@@ -12,6 +12,7 @@ import 'package:projeto_dispositivos_moveis/app/features/settings/settings_scree
 import 'package:projeto_dispositivos_moveis/app/features/settings/settings_viewmodel.dart';
 import 'package:projeto_dispositivos_moveis/app/features/register/register_screen.dart';
 import 'package:projeto_dispositivos_moveis/app/features/register/register_viewmodel.dart';
+import 'package:projeto_dispositivos_moveis/app/repositories/user_repository.dart';
 
 final _rootNavigatorKey =
     GlobalKey<
@@ -74,75 +75,95 @@ class ScaffoldWithNavBar extends StatelessWidget {
   }
 }
 
-final routes = GoRouter(
-  navigatorKey: _rootNavigatorKey,
-  initialLocation: Routes.login,
-  routes: [
-    GoRoute(
-  path: Routes.login,
-  builder: (context, state) => LoginScreen(
-    loginViewModel: context.read<LoginViewModel>(),
-  ),
-),
-    // NOVA ROTA DE CADASTRO AQUI (Fora do menu de navegação)
-    GoRoute(
-      path: Routes.register,
-      builder: (context, state) => RegisterScreen(
-        registerViewModel: context.read<RegisterViewModel>(),
+GoRouter createRouter(UserRepository userRepository) {
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: userRepository.isUserLoggedIn
+        ? Routes.checkin
+        : Routes.login,
+    refreshListenable: userRepository,
+    redirect: (context, state) {
+      final isLoggedIn = userRepository.isUserLoggedIn;
+      final isAuthRoute =
+          state.matchedLocation == Routes.login ||
+          state.matchedLocation == Routes.register;
+
+      if (!isLoggedIn && !isAuthRoute) {
+        return Routes.login;
+      }
+
+      if (isLoggedIn && isAuthRoute) {
+        return Routes.checkin;
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: Routes.login,
+        builder: (context, state) =>
+            LoginScreen(loginViewModel: context.read<LoginViewModel>()),
       ),
-    ),
-    StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) {
-        return ScaffoldWithNavBar(navigationShell: navigationShell);
-      },
-      branches: [
-        // BRANCH 1: CHECK-IN
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.checkin,
-              builder: (context, state) =>
-                  CheckinScreen(checkinViewmodel: context.read()),
-            ),
-          ],
+      // NOVA ROTA DE CADASTRO AQUI (Fora do menu de navegação)
+      GoRoute(
+        path: Routes.register,
+        builder: (context, state) => RegisterScreen(
+          registerViewModel: context.read<RegisterViewModel>(),
         ),
-
-        // BRANCH 2: DIÁRIO
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.diary,
-              builder: (context, state) => DiaryScreen(
-                diaryViewModel: context.read<DiaryViewModel>(),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return ScaffoldWithNavBar(navigationShell: navigationShell);
+        },
+        branches: [
+          // BRANCH 1: CHECK-IN
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.checkin,
+                builder: (context, state) =>
+                    CheckinScreen(checkinViewmodel: context.read()),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
 
-        // BRANCH 3: HISTÓRICO
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.history,
-              builder: (context, state) => HistoryScreen(
-                checkinViewmodel: context.read(),
-                diaryViewModel: context.read<DiaryViewModel>(),
+          // BRANCH 2: DIÁRIO
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.diary,
+                builder: (context, state) =>
+                    DiaryScreen(diaryViewModel: context.read<DiaryViewModel>()),
               ),
-            ),
-          ],
-        ),
-        
-        // BRANCH 4: CONFIGURAÇÕES
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.settings,
-              builder: (context, state) =>
-                  SettingsScreen(viewModel: context.read<SettingsViewModel>()),
-            ),
-          ],
-        ),
-      ],
-    ),
-  ],
-);
+            ],
+          ),
+
+          // BRANCH 3: HISTÓRICO
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.history,
+                builder: (context, state) => HistoryScreen(
+                  checkinViewmodel: context.read(),
+                  diaryViewModel: context.read<DiaryViewModel>(),
+                ),
+              ),
+            ],
+          ),
+
+          // BRANCH 4: CONFIGURAÇÕES
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.settings,
+                builder: (context, state) => SettingsScreen(
+                  viewModel: context.read<SettingsViewModel>(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
