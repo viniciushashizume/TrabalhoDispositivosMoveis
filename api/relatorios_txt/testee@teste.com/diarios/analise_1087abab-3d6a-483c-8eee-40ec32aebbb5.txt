@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: 1087abab-3d6a-483c-8eee-40ec32aebbb5
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje tive um dia tranquilo e consegui descansar bem."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

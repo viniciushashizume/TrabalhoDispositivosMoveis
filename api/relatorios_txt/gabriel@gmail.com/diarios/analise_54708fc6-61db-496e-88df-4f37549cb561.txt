@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 54708fc6-61db-496e-88df-4f37549cb561
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Estou contente porque consegui resolver um problema importante."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Nenhum
+---------------------------------------------

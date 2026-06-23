@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: b8190d94-e509-4dbf-ae75-14a208bc3ce7
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Mesmo com pequenos problemas, consegui manter a calma hoje."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Nenhum
+---------------------------------------------

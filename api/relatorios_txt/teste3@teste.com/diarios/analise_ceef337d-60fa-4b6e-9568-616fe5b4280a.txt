@@ -1,0 +1,8 @@
+Usuário / Email: teste3@teste.com
+ID Diario: ceef337d-60fa-4b6e-9568-616fe5b4280a
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje estou me sentindo muito para baixo sinto que vou ter um Burnout"
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Risco de Burnout
+---------------------------------------------

@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: ba0dd12f-32bd-4124-a0ba-02721f2d0a79
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Acordei com muita ansiedade e não consegui me concentrar."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sintoma de Ansiedade
+---------------------------------------------

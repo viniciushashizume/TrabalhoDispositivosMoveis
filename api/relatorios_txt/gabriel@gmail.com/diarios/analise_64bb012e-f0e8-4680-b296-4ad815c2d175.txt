@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 64bb012e-f0e8-4680-b296-4ad815c2d175
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Consegui cumprir minhas tarefas e terminei o dia em paz."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

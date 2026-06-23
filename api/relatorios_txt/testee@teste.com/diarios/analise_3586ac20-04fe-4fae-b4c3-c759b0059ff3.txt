@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: 3586ac20-04fe-4fae-b4c3-c759b0059ff3
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Estou sentindo uma exaustão constante, mesmo depois de dormir."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Exaustão
+---------------------------------------------

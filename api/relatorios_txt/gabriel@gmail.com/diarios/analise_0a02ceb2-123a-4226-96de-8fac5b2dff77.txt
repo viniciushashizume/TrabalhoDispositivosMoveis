@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 0a02ceb2-123a-4226-96de-8fac5b2dff77
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Estou tão exausto que não consigo terminar tarefas simples."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

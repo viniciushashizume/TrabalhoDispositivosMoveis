@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 1b9a4ec1-1030-45eb-bb7f-403104beb6bb
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Minha ansiedade ficou muito forte e senti o coração acelerar."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sintoma de Ansiedade
+---------------------------------------------

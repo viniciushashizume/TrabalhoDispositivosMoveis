@@ -1,0 +1,12 @@
+Usuário / Email: a@gmail.com
+ID Check-in: b99a4757-449d-4b1e-975f-64d4a017a83a
+---------------------------------------------
+Análise via ML - random forest
+Classificação: Baixo Risco
+Parâmetros Analisados:
+> humor: 5
+> horasSono: 8.0
+> nivelEstresse: 3
+> atividadeFisica: 1
+> interacaoSocial: 1
+---------------------------------------------

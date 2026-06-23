@@ -3,63 +3,88 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 import joblib
 import os
+import random
 
-# Função original mantida para gerar mock data, mas focaremos apenas no texto
-def generate_mock_data(n_samples=1000):
+RISK_MARKERS = [
+    "suicidio", "morrer", "matar", "sumir", "desaparecer", "automutilacao", "cortar",
+    "desesperanca", "vazio", "inutil", "culpa", "fardo", "panico", "ataque de panico",
+    "insonia", "nao durmo", "delirio", "alucinacao", "vozes", "isolamento", "nao saio",
+    "anedonia", "perdi a vontade", "sem prazer", "burnout", "exaustao extrema",
+    "ansiedade", "angustia", "desespero", "triste", "tristeza", "ruim", "pessimo",
+    "cansado", "exaustao", "medo"
+]
+
+POSITIVE_MARKERS = [
+    "bem-estar", "feliz", "alegre", "motivado", "energia", "disposicao", "esperanca",
+    "otimista", "descansado", "dormi bem", "calmo", "tranquilo", "exercicio",
+    "caminhada", "treino", "amigos", "familia", "conversei", "produtivo", "focado"
+]
+
+NEUTRAL_FILLERS = [
+    "hoje eu", "sinto que", "estou", "no trabalho", "em casa", "durante a tarde", 
+    "quando acordei", "agora", "fiquei"
+]
+
+def generate_synthetic_data(n_samples=2000):
     np.random.seed(42)
-    
-    text_samples_good = [
-        "Me sinto ótimo hoje, produtivo e focado nas minhas tarefas.",
-        "Excelente noite de sono, acordei com bastante disposição e energia.",
-        "O dia foi muito tranquilo e pacífico, sem qualquer sinal de estresse.",
-        "Focado e motivado com o novo projeto. O ambiente de trabalho está ótimo.",
-        "Tudo bem por aqui, sem reclamações. Fui dar uma caminhada e relaxei.",
-        # ... (adicione o restante dos seus textos positivos aqui)
-    ]
-    
-    text_samples_bad = [
-        "Estou me sentindo muito exausta com a quantidade de tarefas acumuladas hoje.",
-        "Trabalho sob pressão constante, sinto que não vou dar conta desse ritmo de cobranças.",
-        "Mais um dia super cansativo. Fiquei até tarde e já acordei sem ânimo e esgotada.",
-        "A dor psicológica está insuportável hoje. Às vezes penso que seria melhor morrer ou sumir de vez.",
-        "Coração disparado e falta de ar constante. A ansiedade está me sufocando hoje e me paralisa.",
-        # ... (adicione o restante dos seus textos negativos aqui)
-    ]
+    random.seed(42)
     
     data = []
-    labels = [] 
     
     for _ in range(n_samples):
-        risk = np.random.choice([0, 1])
-        labels.append(risk)
+        risk_label = np.random.choice([0, 1])
         
-        if risk == 0:
-            text = np.random.choice(text_samples_good)
+        num_markers = random.randint(1, 3)
+        if risk_label == 1:
+            chosen_markers = random.sample(RISK_MARKERS, num_markers)
+            humor = np.random.randint(1, 5) # 1 a 4
+            horas_sono = np.random.choice([np.random.randint(0, 5), np.random.randint(11, 15)]) # muito pouco ou muito
+            nivel_estresse = np.random.randint(4, 6) # 4 ou 5
+            atividade_fisica = 0 # Falso
+            interacao_social = 0 # Isolado
         else:
-            text = np.random.choice(text_samples_bad)
-            
-        # Coletamos apenas o texto, ignorando os inputs numéricos de check-in
-        data.append({'text': text})
+            chosen_markers = random.sample(POSITIVE_MARKERS, num_markers)
+            humor = np.random.randint(5, 11) # 5 a 10
+            horas_sono = np.random.randint(6, 10) # 6 a 9
+            nivel_estresse = np.random.randint(1, 4) # 1 a 3
+            atividade_fisica = 1 # Verdadeiro
+            interacao_social = np.random.randint(1, 3) # 1 (Pouco) ou 2 (Muito)
         
-    df = pd.DataFrame(data)
-    y = np.array(labels)
-    return df, y
+        text_parts = []
+        for marker in chosen_markers:
+            filler = random.choice(NEUTRAL_FILLERS)
+            text_parts.append(f"{filler} {marker}")
+            
+        text = ", ".join(text_parts) + "."
+        
+        data.append({
+            'text': text,
+            'humor': humor,
+            'horasSono': horas_sono,
+            'nivelEstresse': nivel_estresse,
+            'atividadeFisica': atividade_fisica,
+            'interacaoSocial': interacao_social,
+            'risk_label': risk_label
+        })
+        
+    return pd.DataFrame(data)
 
-def train_and_save_nlp_model():
-    print("[PLN] Gerando dados de treinamento simulados focados em texto...")
-    X, y = generate_mock_data(1200)
+def train_and_save_models():
+    print("[ML] Gerando dados de treinamento sintéticos com marcadores clínicos reais...")
+    df = generate_synthetic_data(2500)
     
-    # Separando treino e teste (passamos apenas a série de texto)
-    X_train, X_test, y_train, y_test = train_test_split(X['text'], y, test_size=0.2, random_state=42)
+    print("[PLN] Treinando o modelo de Processamento de Linguagem Natural...")
+    X_text = df['text']
+    y = df['risk_label']
     
-    print("[PLN] Criando o pipeline de Processamento de Linguagem Natural...")
+    X_train_t, X_test_t, y_train_t, y_test_t = train_test_split(X_text, y, test_size=0.2, random_state=42)
     
-    # Pipeline focado puramente em extração de features do texto (N-grams ajudam a pegar contexto)
-    pipeline = Pipeline(steps=[
-        ('tfidf', TfidfVectorizer(max_features=1000, stop_words=None, ngram_range=(1, 3))),
+    nlp_pipeline = Pipeline(steps=[
+        ('tfidf', TfidfVectorizer(max_features=1500, ngram_range=(1, 3))),
         ('classifier', MLPClassifier(
             hidden_layer_sizes=(64, 32),
             activation='relu',
@@ -70,26 +95,29 @@ def train_and_save_nlp_model():
             validation_fraction=0.1
         ))
     ])
+    nlp_pipeline.fit(X_train_t, y_train_t)
+    print(f"[PLN] Acurácia NLP (Texto): {nlp_pipeline.score(X_test_t, y_test_t) * 100:.2f}%")
     
-    print("[PLN] Treinando o modelo preditivo baseado em texto...")
-    pipeline.fit(X_train, y_train)
+    print("[ML] Treinando o Predictive Pipeline (Métricas Quantitativas - Random Forest)...")
+    FEATURES = ['humor', 'horasSono', 'nivelEstresse', 'atividadeFisica', 'interacaoSocial']
+    X_quant = df[FEATURES]
     
-    score = pipeline.score(X_test, y_test)
-    print(f"[PLN] Acurácia no teste do modelo NLP: {score * 100:.2f}%")
+    X_train_q, X_test_q, y_train_q, y_test_q = train_test_split(X_quant, y, test_size=0.2, random_state=42)
     
-    print("[PLN] Salvando o modelo treinado...")
-
-    # Lê a pasta atual (services) e recua um nível para a raiz (api)
+    rf_pipeline = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42, class_weight='balanced')
+    rf_pipeline.fit(X_train_q, y_train_q)
+    print(f"[ML] Acurácia Predictive Pipeline (Quantitativo): {rf_pipeline.score(X_test_q, y_test_q) * 100:.2f}%")
+    
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     MODELS_DIR = os.path.join(BASE_DIR, 'models')
-
     os.makedirs(MODELS_DIR, exist_ok=True)
-
-    # Define o caminho absoluto final do ficheiro
-    pipeline_path = os.path.join(MODELS_DIR, 'nlp_pipeline.pkl')
-
-    joblib.dump(pipeline, pipeline_path)
-    print(f"[PLN] Pipeline salvo com sucesso em: {pipeline_path}")
+    
+    nlp_path = os.path.join(MODELS_DIR, 'nlp_pipeline.pkl')
+    predictive_path = os.path.join(MODELS_DIR, 'predictive_pipeline.pkl')
+    
+    joblib.dump(nlp_pipeline, nlp_path)
+    joblib.dump(rf_pipeline, predictive_path)
+    print(f"[ML] Modelos salvos com sucesso em {MODELS_DIR}!")
 
 if __name__ == '__main__':
-    train_and_save_nlp_model()
+    train_and_save_models()

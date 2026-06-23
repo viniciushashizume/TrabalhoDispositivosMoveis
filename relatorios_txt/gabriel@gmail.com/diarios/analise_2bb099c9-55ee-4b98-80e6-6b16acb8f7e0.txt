@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 2bb099c9-55ee-4b98-80e6-6b16acb8f7e0
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje tive um dia tranquilo e consegui descansar bem."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

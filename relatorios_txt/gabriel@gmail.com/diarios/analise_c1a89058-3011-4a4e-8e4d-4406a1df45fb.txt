@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: c1a89058-3011-4a4e-8e4d-4406a1df45fb
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Dormi bem e acordei disposto para começar o dia."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

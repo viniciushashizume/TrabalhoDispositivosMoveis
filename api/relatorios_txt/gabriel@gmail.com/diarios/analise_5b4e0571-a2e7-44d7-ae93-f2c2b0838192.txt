@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 5b4e0571-a2e7-44d7-ae93-f2c2b0838192
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "A depressão tem tirado minha energia e meu interesse pelas coisas."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

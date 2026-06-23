@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: 61a8996c-7a52-496b-a8d3-5092ce636e2b
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "alô teste testando alô testando"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

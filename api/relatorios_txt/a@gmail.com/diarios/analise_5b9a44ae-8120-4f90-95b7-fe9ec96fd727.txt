@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 5b9a44ae-8120-4f90-95b7-fe9ec96fd727
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Passei o dia com tristeza e uma sensação forte de vazio."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sentimento de Vazio, Humor Deprimido
+---------------------------------------------

@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 6f6e1254-08d5-4c31-9ff5-3fdc676569eb
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Sinto sinais de burnout, estou irritado, cansado e sem motivação."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Risco de Burnout, Cansaço Excessivo
+---------------------------------------------

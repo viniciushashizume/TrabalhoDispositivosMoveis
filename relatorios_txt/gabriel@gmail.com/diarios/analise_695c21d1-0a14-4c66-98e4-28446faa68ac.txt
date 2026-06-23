@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 695c21d1-0a14-4c66-98e4-28446faa68ac
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Testei"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

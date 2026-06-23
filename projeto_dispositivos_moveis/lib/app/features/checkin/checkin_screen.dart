@@ -52,7 +52,7 @@ class _CheckinScreenState extends State<CheckinScreen> { //variáveis para armaz
     }
   }
 
-  void enviar() { //bjeto CheckIn com os valores da interface
+  void enviar() async { //objeto CheckIn com os valores da interface
     final checkin = CheckIn(
       data: DateTime.now(),
       humor: humor.round(),
@@ -62,16 +62,20 @@ class _CheckinScreenState extends State<CheckinScreen> { //variáveis para armaz
       interacaoSocial: interacaoSocial,
     );
 
-    widget.checkinViewmodel.saveCheckin(checkin);
+    await widget.checkinViewmodel.saveCheckin(checkin);
 
+    // A predição continuará ocorrendo no ViewModel por debaixo dos panos.
+    // O popup foi removido conforme solicitado.
     // valores iniciais de estado
-    setState(() {
-      humor = 5;
-      horasSono = 8;
-      nivelEstresse = 3;
-      atividadeFisica = false;
-      interacaoSocial = 'Interações breves';
-    });
+    if (mounted) {
+      setState(() {
+        humor = 5;
+        horasSono = 8;
+        nivelEstresse = 3;
+        atividadeFisica = false;
+        interacaoSocial = 'Interações breves';
+      });
+    }
   }
 
   @override

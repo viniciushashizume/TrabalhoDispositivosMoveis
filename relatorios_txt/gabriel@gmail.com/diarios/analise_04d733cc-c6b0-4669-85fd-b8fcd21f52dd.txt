@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 04d733cc-c6b0-4669-85fd-b8fcd21f52dd
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Preparei uma refeição, cuidei de mim e tive uma noite agradável."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Nenhum
+---------------------------------------------

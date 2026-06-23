@@ -1,0 +1,8 @@
+Usuário / Email: nicolas@gmail.com
+ID Diário: ac857a2d-b6da-4393-b292-846c8843c0fe
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "a"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

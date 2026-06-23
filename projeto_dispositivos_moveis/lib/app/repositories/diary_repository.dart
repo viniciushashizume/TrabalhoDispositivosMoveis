@@ -23,7 +23,7 @@ class DiaryRepository {
     return _diaries;
   }
 
-  Future<void> addDiary(Diary diary) async {
+  Future<String> addDiary(Diary diary) async {
     final user = _supabase.auth.currentUser;
     if (user == null) {
       throw Exception('Usuario nao autenticado.');
@@ -33,6 +33,7 @@ class DiaryRepository {
     data.remove('id');
     data['user_id'] = user.id;
 
-    await _supabase.from('diaries').insert(data);
+    final response = await _supabase.from('diaries').insert(data).select().single();
+    return response['id'].toString();
   }
 }

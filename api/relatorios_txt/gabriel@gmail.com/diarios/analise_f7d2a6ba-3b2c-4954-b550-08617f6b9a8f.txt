@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: f7d2a6ba-3b2c-4954-b550-08617f6b9a8f
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Senti saudade e fiquei triste por um momento, depois melhorei."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Humor Deprimido
+---------------------------------------------

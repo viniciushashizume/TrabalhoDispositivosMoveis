@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 4681d079-b15b-4ce3-a808-1ebbabed3dfa
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "O trabalho está me consumindo e sinto que estou entrando em burnout."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Risco de Burnout
+---------------------------------------------

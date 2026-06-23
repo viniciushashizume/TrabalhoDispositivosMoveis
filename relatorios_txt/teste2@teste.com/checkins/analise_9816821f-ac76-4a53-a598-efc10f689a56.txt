@@ -1,0 +1,12 @@
+Usuário / Email: teste2@teste.com
+ID Check-in: 9816821f-ac76-4a53-a598-efc10f689a56
+---------------------------------------------
+Análise via ML - random forest
+Classificação: Baixo Risco
+Parâmetros Analisados:
+> humor: 5
+> horasSono: 8.0
+> nivelEstresse: 3
+> atividadeFisica: 0
+> interacaoSocial: 1
+---------------------------------------------

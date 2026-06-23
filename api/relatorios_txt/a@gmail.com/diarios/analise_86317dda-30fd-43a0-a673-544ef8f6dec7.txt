@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 86317dda-30fd-43a0-a673-544ef8f6dec7
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Tenho me sentido preso em uma depressão que parece não passar."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

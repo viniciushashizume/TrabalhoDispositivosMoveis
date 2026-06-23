@@ -1,0 +1,8 @@
+Usuário / Email: nicolas@gmail.com
+ID Diário: 97beb798-b8a5-4bb7-a8b4-f4e2f51b3d25
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje estou me sentindo muito triste e com burnout"
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Risco de Burnout, Humor Deprimido
+---------------------------------------------

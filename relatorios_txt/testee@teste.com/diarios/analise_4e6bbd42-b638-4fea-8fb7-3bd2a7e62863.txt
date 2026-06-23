@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: 4e6bbd42-b638-4fea-8fb7-3bd2a7e62863
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje o meu dia foi muito bom"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

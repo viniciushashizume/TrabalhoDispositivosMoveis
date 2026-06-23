@@ -82,13 +82,20 @@ class _DiaryScreenState extends State<DiaryScreen> {
                     return;
                   }
 
-                  bool success = await vm.saveDiary();
+                  final prediction = await vm.saveDiary();
 
-                  if (success && mounted) {
+                  if (prediction != null && mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Diário registrado com sucesso!'),
+                        content: Text('Diário registrado com sucesso! O relatório foi gerado via API.'),
                         backgroundColor: Colors.green,
+                      ),
+                    );
+                  } else if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Erro ao registrar diário.'),
+                        backgroundColor: Colors.red,
                       ),
                     );
                   }

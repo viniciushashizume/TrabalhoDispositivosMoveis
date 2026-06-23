@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 9119b689-3ac5-4b7a-8c34-6384d824f14e
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Tenho me sentido preso em uma depressão que parece não passar."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

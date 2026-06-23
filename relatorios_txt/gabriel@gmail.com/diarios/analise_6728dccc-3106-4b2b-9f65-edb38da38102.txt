@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 6728dccc-3106-4b2b-9f65-edb38da38102
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Recebi uma boa notícia e passei o restante do dia feliz."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

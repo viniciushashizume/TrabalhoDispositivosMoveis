@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 66b7498e-215d-4bdf-bc2a-e4dbb04ec7a7
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Minha ansiedade virou desespero e não consigo pensar com clareza."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sintoma de Ansiedade, Desespero
+---------------------------------------------

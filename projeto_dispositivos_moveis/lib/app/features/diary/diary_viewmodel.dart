@@ -3,9 +3,13 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import '../../repositories/diary_repository.dart';
 import '../../models/diary.dart';
+import '../../services/api_service.dart';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DiaryViewModel extends ChangeNotifier {
   final DiaryRepository diaryRepository;
+  final ApiService apiService = ApiService();
 
   List<Diary> diaries = [];
   bool isLoaded = false;
@@ -91,25 +95,38 @@ class DiaryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> saveDiary() async {
+  Future<Map<String, dynamic>?> saveDiary() async {
     final text = textController.text.trim();
-    if (text.isEmpty) return false;
+    if (text.isEmpty) return null;
 
     try {
+      // 1. Salva no banco de dados (Supabase)
       final newDiary = Diary(
         content: text,
         date: DateTime.now(),
       );
 
-      await diaryRepository.addDiary(newDiary);
+      final idGerado = await diaryRepository.addDiary(newDiary);
+      final email = Supabase.instance.client.auth.currentUser?.email;
 
+      // 2. Chama a API de IA Python com os dados do registro
+      final predictionResult = await apiService.analyzeDiary(
+        text,
+        userEmail: email,
+        idRegistro: idGerado,
+        tipo: 'diario',
+      );
+
+      // 3. Atualiza os dados da tela
       await load();
 
       clearText();
-      return true;
+      
+      // Retorna a predição
+      return predictionResult ?? {}; 
     } catch (e) {
       print("Erro ao salvar diário: $e");
-      return false;
+      return null;
     }
   }
 

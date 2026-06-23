@@ -1,0 +1,12 @@
+Usuário / Email: gabriel@gmail.com
+ID Check-in: 01d33669-c66f-4587-ac5a-9c216a9d9152
+---------------------------------------------
+Análise via ML - random forest
+Classificação: Baixo Risco
+Parâmetros Analisados:
+> humor: 5
+> horasSono: 8.0
+> nivelEstresse: 3
+> atividadeFisica: 1
+> interacaoSocial: 1
+---------------------------------------------

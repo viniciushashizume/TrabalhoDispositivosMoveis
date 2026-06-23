@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 459c640f-f34e-4b61-82dd-8c48f63e7b86
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Senti pânico ao sair de casa e precisei voltar imediatamente."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Crise de Pânico
+---------------------------------------------

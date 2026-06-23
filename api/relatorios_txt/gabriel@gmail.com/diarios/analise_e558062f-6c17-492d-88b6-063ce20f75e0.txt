@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: e558062f-6c17-492d-88b6-063ce20f75e0
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Consegui descansar, ouvir música e terminar o dia mais leve."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

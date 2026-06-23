@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 1fb82d1a-950c-40f9-9a8a-11ccba8884d8
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Acordei com muita ansiedade e não consegui me concentrar."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sintoma de Ansiedade
+---------------------------------------------

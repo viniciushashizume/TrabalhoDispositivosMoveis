@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: f6b45cf2-e71c-4117-9e97-49aafc2769ef
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Passei um tempo feliz com minha família e me senti acolhido."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

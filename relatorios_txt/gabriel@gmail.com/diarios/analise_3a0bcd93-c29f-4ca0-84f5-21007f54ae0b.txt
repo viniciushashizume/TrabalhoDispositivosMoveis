@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 3a0bcd93-c29f-4ca0-84f5-21007f54ae0b
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje fiquei um pouco cansado, mas consegui relaxar depois."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Cansaço Excessivo
+---------------------------------------------

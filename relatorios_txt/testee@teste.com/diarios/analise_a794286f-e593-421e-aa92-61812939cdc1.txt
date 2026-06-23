@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: a794286f-e593-421e-aa92-61812939cdc1
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "aaaa"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

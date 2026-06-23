@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: e175a1ef-aafc-4413-97dd-b82fc76a9009
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Conversei com amigos e me diverti bastante durante a tarde."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

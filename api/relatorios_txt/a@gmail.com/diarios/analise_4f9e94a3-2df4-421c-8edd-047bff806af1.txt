@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 4f9e94a3-2df4-421c-8edd-047bff806af1
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Estou enfrentando uma tristeza profunda e não tenho vontade de fazer nada."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Humor Deprimido
+---------------------------------------------

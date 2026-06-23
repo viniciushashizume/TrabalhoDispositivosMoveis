@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 5f264e1b-6fd5-4d93-ab7b-df5ce26a2bff
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Fiz uma caminhada, respirei ar fresco e fiquei mais animado."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

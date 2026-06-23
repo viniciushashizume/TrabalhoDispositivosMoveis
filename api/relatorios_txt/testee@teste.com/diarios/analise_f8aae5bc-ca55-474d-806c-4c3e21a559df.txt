@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: f8aae5bc-ca55-474d-806c-4c3e21a559df
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Consegui cumprir minhas tarefas e terminei o dia em paz."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

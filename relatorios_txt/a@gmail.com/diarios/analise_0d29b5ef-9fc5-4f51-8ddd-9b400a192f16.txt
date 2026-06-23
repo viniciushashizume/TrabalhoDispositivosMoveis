@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 0d29b5ef-9fc5-4f51-8ddd-9b400a192f16
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Tive uma crise de pânico e fiquei com muito medo de acontecer novamente."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Crise de Pânico, Sintoma de Ansiedade (Medo)
+---------------------------------------------

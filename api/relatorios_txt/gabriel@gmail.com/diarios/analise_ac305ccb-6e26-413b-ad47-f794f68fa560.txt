@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: ac305ccb-6e26-413b-ad47-f794f68fa560
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "A exaustão mental está afetando meu trabalho e relacionamentos."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Exaustão
+---------------------------------------------

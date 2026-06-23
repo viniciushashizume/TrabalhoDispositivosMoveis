@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: ce895190-129c-4ab5-9f9e-593ea3b44c37
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "O dia foi corrido, porém consegui organizar tudo sem me desesperar."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Nenhum
+---------------------------------------------

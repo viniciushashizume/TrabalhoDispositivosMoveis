@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: 4da64f73-c268-4109-b369-e709a0e51494
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Tive preocupação com uma prova, mas consegui estudar e me acalmar."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

@@ -11,9 +11,17 @@ from core.database import supabase
 
 app = FastAPI(title="Saúde Mental - API NLP e Extração de Marcadores")
 
-# Modelo de entrada simplificado para focar no diário/texto
-class TextPredictionInput(BaseModel):
+# Modelo de entrada com dados textuais e quantitativos opcionais
+class PredictionInput(BaseModel):
     text: str
+    humor: Optional[int] = None
+    horasSono: Optional[int] = None
+    nivelEstresse: Optional[int] = None
+    atividadeFisica: Optional[int] = None
+    interacaoSocial: Optional[int] = None
+    user_email: Optional[str] = None
+    id_registro: Optional[str] = None
+    tipo: Optional[str] = "diario"
 
 class PredictionResponse(BaseModel):
     risco_predito: str
@@ -25,18 +33,32 @@ class MockDataConfig(BaseModel):
     quantidade: int = 15
     user_id: str = "00000000-0000-0000-0000-000000000001"
 
-# Caminho atualizado para o novo pipeline focado em PLN
+# Caminho atualizado para os pipelines NLP e Preditivo
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PIPELINE_PATH = os.path.join(BASE_DIR, 'models', 'nlp_pipeline.pkl')
-pipeline = None
+NLP_PIPELINE_PATH = os.path.join(BASE_DIR, 'models', 'nlp_pipeline.pkl')
+PREDICTIVE_PIPELINE_PATH = os.path.join(BASE_DIR, 'models', 'predictive_pipeline.pkl')
+nlp_pipeline = None
+predictive_pipeline = None
 
-# O dicionário de ALERT_KEYWORDS existente é excelente. Mantenha ele como está no seu código original.
+# Marcadores clínicos de risco
 ALERT_KEYWORDS = {
-    "exausto": "Exaustão", "exaustao": "Exaustão", "burnout": "Risco de Burnout",
-    "ansiedade": "Ansiedade", "panico": "Crise de Pânico", "palpitacao": "Sintoma Físico (Palpitação)",
-    "triste": "Tristeza", "desespero": "Desespero", "depressao": "Depressão",
-    "morrer": "Ideação de Risco", "suicidio": "Risco Crítico", "sumir": "Ideação de Fuga"
-    # ... (manter todos os seus mapeamentos)
+    "suicidio": "Risco Crítico", "morrer": "Ideação de Risco", "matar": "Ideação de Risco",
+    "sumir": "Ideação de Fuga", "desaparecer": "Ideação de Fuga",
+    "automutilacao": "Automutilação", "cortar": "Automutilação",
+    "desesperanca": "Desesperança", "vazio": "Sentimento de Vazio", "inutil": "Sentimento de Inutilidade",
+    "culpa": "Culpa Excessiva", "fardo": "Sentimento de Fardo",
+    "panico": "Crise de Pânico", "ataque de panico": "Crise de Pânico",
+    "insonia": "Insônia Severa", "nao durmo": "Privação de Sono",
+    "delirio": "Sintoma Psicótico", "alucinacao": "Sintoma Psicótico",
+    "vozes": "Sintoma Psicótico (Vozes)",
+    "isolamento": "Isolamento Social", "nao saio": "Isolamento Social",
+    "anedonia": "Anedonia", "perdi a vontade": "Anedonia", "sem prazer": "Anedonia",
+    "burnout": "Risco de Burnout", "exaustao extrema": "Exaustão Severa",
+    "ansiedade": "Sintoma de Ansiedade", "angustia": "Angústia",
+    "desespero": "Desespero", "triste": "Humor Deprimido", "tristeza": "Humor Deprimido",
+    "ruim": "Afeto Negativo", "pessimo": "Afeto Negativo",
+    "cansado": "Cansaço Excessivo", "exaustao": "Exaustão",
+    "medo": "Sintoma de Ansiedade (Medo)"
 }
 
 def clean_text(text: str) -> str:
@@ -56,20 +78,22 @@ def extract_risk_keywords(text: str) -> List[str]:
     return detected
 
 @app.on_event("startup")
-@app.on_event("startup")
 def load_model():
-    global pipeline
-    # ADICIONE ESTA LINHA DE DEBUG:
-    print(f"[DEBUG] O FastAPI está a procurar o modelo exatamente em:\n{os.path.abspath(PIPELINE_PATH)}")
+    global nlp_pipeline, predictive_pipeline
 
-    if os.path.exists(PIPELINE_PATH):
+    if os.path.exists(NLP_PIPELINE_PATH):
         try:
-            pipeline = joblib.load(PIPELINE_PATH)
-            print("[PLN] Pipeline carregado com sucesso!")
+            nlp_pipeline = joblib.load(NLP_PIPELINE_PATH)
+            print("[PLN] Pipeline NLP carregado com sucesso!")
         except Exception as e:
-            print(f"[PLN] Erro ao carregar o pipeline: {e}")
-    else:
-        print("[PLN] Atenção: Modelo não encontrado. Rode 'python train_model.py'.")
+            print(f"[PLN] Erro ao carregar o pipeline NLP: {e}")
+            
+    if os.path.exists(PREDICTIVE_PIPELINE_PATH):
+        try:
+            predictive_pipeline = joblib.load(PREDICTIVE_PIPELINE_PATH)
+            print("[ML] Predictive Pipeline (Check-in) carregado com sucesso!")
+        except Exception as e:
+            print(f"[ML] Erro ao carregar o Predictive Pipeline: {e}")
 
 @app.post("/inject-mocks")
 def inject_mocks(config: MockDataConfig):
@@ -150,24 +174,52 @@ def inject_mocks(config: MockDataConfig):
     }
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict_risk(data: TextPredictionInput):
-    if pipeline is None:
+def predict_risk(data: PredictionInput):
+    if nlp_pipeline is None:
         raise HTTPException(status_code=500, detail="Modelo NLP não está carregado.")
     
     try:
-        # A predição agora recebe apenas um array ou Series contendo o texto
-        prediction = pipeline.predict([data.text])[0]
-        probabilities = pipeline.predict_proba([data.text])[0]
+        # 1. Análise Qualitativa (PLN)
+        nlp_pred = nlp_pipeline.predict([data.text])[0]
+        nlp_probs = nlp_pipeline.predict_proba([data.text])[0]
+        prob_high_risk_nlp = float(nlp_probs[1])
         
-        is_high_risk = bool(prediction == 1)
-        prob_high_risk = float(probabilities[1])
-        prob_low_risk = float(probabilities[0])
+        # 2. Análise Quantitativa (Check-in via Predictive Pipeline)
+        prob_high_risk_quant = None
+        has_quant_data = all(v is not None for v in [data.humor, data.horasSono, data.nivelEstresse, data.atividadeFisica, data.interacaoSocial])
         
-        # O sistema de extração de marcadores continua sendo nossa salvaguarda clínica principal
-        marcadores_detectados = extract_risk_keywords(data.text)
+        if has_quant_data and predictive_pipeline is not None:
+            quant_df = pd.DataFrame([{
+                'humor': data.humor,
+                'horasSono': data.horasSono,
+                'nivelEstresse': data.nivelEstresse,
+                'atividadeFisica': data.atividadeFisica,
+                'interacaoSocial': data.interacaoSocial
+            }])
+            quant_probs = predictive_pipeline.predict_proba(quant_df)[0]
+            prob_high_risk_quant = float(quant_probs[1])
         
-        critical_indicators = ["Risco Crítico", "Ideação de Risco", "Ideação de Desistência", "Ideação de Fuga"]
-        has_critical = any(ind in marcadores_detectados for ind in critical_indicators)
+        # 3. Avaliação Conjunta e Direcionamento por Tipo
+        if data.tipo == "checkin" and prob_high_risk_quant is not None:
+            # Se for checkin, ignora o texto padrão enviado e confia 100% nos números
+            prob_high_risk = prob_high_risk_quant
+        elif prob_high_risk_quant is not None:
+            # Se não for só checkin mas tiver os dados quantitativos, faz a ponderação
+            prob_high_risk = (prob_high_risk_nlp * 0.6) + (prob_high_risk_quant * 0.4)
+        else:
+            prob_high_risk = prob_high_risk_nlp
+            
+        prob_low_risk = 1.0 - prob_high_risk
+        is_high_risk = prob_high_risk > 0.5
+        
+        # 4. Extração de Marcadores Clínicos (Salvaguarda - apenas para diários reais)
+        if data.tipo == "checkin":
+            marcadores_detectados = []
+            has_critical = False
+        else:
+            marcadores_detectados = extract_risk_keywords(data.text)
+            critical_indicators = ["Risco Crítico", "Ideação de Risco", "Automutilação", "Ideação de Fuga", "Desesperança"]
+            has_critical = any(ind in marcadores_detectados for ind in critical_indicators)
         
         if has_critical:
             is_high_risk = True
@@ -176,6 +228,34 @@ def predict_risk(data: TextPredictionInput):
             
         classe_risco = "Alto Risco [ALERTA]" if is_high_risk else "Baixo Risco"
         
+        if data.user_email and data.id_registro:
+            base_destino = "relatorios_txt"
+            safe_email = "".join(c for c in data.user_email if c.isalnum() or c in "@.-_")
+            pasta_usuario = os.path.join(base_destino, safe_email, f"{data.tipo}s")
+            os.makedirs(pasta_usuario, exist_ok=True)
+            caminho_arquivo = os.path.join(pasta_usuario, f"analise_{data.id_registro}.txt")
+            
+            with open(caminho_arquivo, "w", encoding="utf-8") as file:
+                file.write(f"Usuário / Email: {data.user_email}\n")
+                file.write(f"ID {data.tipo.capitalize()}: {data.id_registro}\n")
+                file.write("-" * 45 + "\n")
+                if data.tipo == "checkin" and has_quant_data:
+                    file.write("Análise via ML - random forest\n")
+                    file.write(f"Classificação: {classe_risco}\n")
+                    file.write("Parâmetros Analisados:\n")
+                    file.write(f"> humor: {data.humor}\n")
+                    file.write(f"> horasSono: {data.horasSono}\n")
+                    file.write(f"> nivelEstresse: {data.nivelEstresse}\n")
+                    file.write(f"> atividadeFisica: {data.atividadeFisica}\n")
+                    file.write(f"> interacaoSocial: {data.interacaoSocial}\n")
+                else:
+                    file.write("Análise via NLP\n")
+                    file.write(f"Texto Analisado: \"{data.text}\"\n")
+                    file.write(f"Classificação PLN: {classe_risco}\n")
+                    marcadores_str = ', '.join(marcadores_detectados) if marcadores_detectados else 'Nenhum'
+                    file.write(f"Marcadores Identificados: {marcadores_str}\n")
+                file.write("-" * 45 + "\n")
+        
         return PredictionResponse(
             risco_predito=classe_risco,
             confianca=max(prob_high_risk, prob_low_risk),
@@ -183,4 +263,4 @@ def predict_risk(data: TextPredictionInput):
             marcadores_identificados=marcadores_detectados
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro durante a análise NLP: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro durante a análise preditiva: {str(e)}")

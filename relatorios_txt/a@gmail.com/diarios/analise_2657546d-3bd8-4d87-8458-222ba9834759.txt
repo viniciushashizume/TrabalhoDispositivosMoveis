@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 2657546d-3bd8-4d87-8458-222ba9834759
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "A exaustão mental está afetando meu trabalho e meus relacionamentos."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Exaustão
+---------------------------------------------

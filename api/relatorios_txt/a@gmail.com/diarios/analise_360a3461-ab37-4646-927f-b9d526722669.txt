@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: 360a3461-ab37-4646-927f-b9d526722669
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "A ansiedade não me deixou dormir e tive pensamentos acelerados."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sintoma de Ansiedade
+---------------------------------------------

@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: f659a169-9fb0-453b-a75c-739f1e795530
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "testeteste"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

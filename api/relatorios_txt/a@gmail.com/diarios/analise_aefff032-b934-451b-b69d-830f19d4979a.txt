@@ -1,0 +1,8 @@
+Usuário / Email: a@gmail.com
+ID Diário: aefff032-b934-451b-b69d-830f19d4979a
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Minha ansiedade ficou muito forte hoje e senti o coração acelerar."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Sintoma de Ansiedade
+---------------------------------------------

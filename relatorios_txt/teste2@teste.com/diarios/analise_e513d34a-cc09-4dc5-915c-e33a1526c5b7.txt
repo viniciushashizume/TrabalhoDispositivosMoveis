@@ -1,0 +1,8 @@
+Usuário / Email: teste2@teste.com
+ID Diário: e513d34a-cc09-4dc5-915c-e33a1526c5b7
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje estive mal o dia todo, muito ansioso"
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

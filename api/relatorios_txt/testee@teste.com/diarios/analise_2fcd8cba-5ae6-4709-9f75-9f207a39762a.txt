@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: 2fcd8cba-5ae6-4709-9f75-9f207a39762a
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje meu dia foi muito ruim"
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Afeto Negativo
+---------------------------------------------

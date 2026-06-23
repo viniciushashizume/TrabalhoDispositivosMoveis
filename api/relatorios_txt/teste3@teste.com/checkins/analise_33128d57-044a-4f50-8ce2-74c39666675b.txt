@@ -1,0 +1,12 @@
+Usuário / Email: teste3@teste.com
+ID Checkin: 33128d57-044a-4f50-8ce2-74c39666675b
+---------------------------------------------
+Análise via ML - random forest
+Classificação: Alto Risco [ALERTA]
+Parâmetros Analisados:
+> humor: 1
+> horasSono: 18
+> nivelEstresse: 5
+> atividadeFisica: 0
+> interacaoSocial: 0
+---------------------------------------------

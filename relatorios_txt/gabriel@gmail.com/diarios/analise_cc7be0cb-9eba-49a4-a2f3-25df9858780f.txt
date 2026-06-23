@@ -1,0 +1,8 @@
+Usuário / Email: gabriel@gmail.com
+ID Diário: cc7be0cb-9eba-49a4-a2f3-25df9858780f
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Estou enfrentando uma tristeza profunda e não quero fazer nada."
+Classificação PLN: Alto Risco [ALERTA]
+Marcadores Identificados: Humor Deprimido
+---------------------------------------------

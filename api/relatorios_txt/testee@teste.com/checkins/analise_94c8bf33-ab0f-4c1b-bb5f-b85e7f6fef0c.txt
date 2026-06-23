@@ -1,0 +1,12 @@
+Usuário / Email: testee@teste.com
+ID Check-in: 94c8bf33-ab0f-4c1b-bb5f-b85e7f6fef0c
+---------------------------------------------
+Análise via ML - random forest
+Classificação: Alto Risco [ALERTA]
+Parâmetros Analisados:
+> humor: 5
+> horasSono: 8.0
+> nivelEstresse: 3
+> atividadeFisica: 0
+> interacaoSocial: 1
+---------------------------------------------

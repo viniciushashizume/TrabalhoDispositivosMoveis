@@ -1,0 +1,8 @@
+Usuário / Email: teste3@teste.com
+ID Diario: ab3bd506-965a-4df7-a143-9110c06260a9
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Hoje eu estou muito bem"
+Classificação PLN: Baixo Risco
+Marcadores Identificados: Nenhum
+---------------------------------------------

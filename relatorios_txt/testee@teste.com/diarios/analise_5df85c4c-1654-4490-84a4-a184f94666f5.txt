@@ -1,0 +1,8 @@
+Usuário / Email: testee@teste.com
+ID Diário: 5df85c4c-1654-4490-84a4-a184f94666f5
+---------------------------------------------
+Análise via NLP
+Texto Analisado: "Passei um tempo feliz com minha família e me senti acolhido."
+Classificação PLN: Baixo Risco [OK]
+Marcadores Identificados: Nenhum
+---------------------------------------------

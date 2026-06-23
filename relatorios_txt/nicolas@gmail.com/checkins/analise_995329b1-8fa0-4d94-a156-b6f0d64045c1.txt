@@ -1,0 +1,12 @@
+Usuário / Email: nicolas@gmail.com
+ID Check-in: 995329b1-8fa0-4d94-a156-b6f0d64045c1
+---------------------------------------------
+Análise via ML - random forest
+Classificação: Alto Risco [ALERTA]
+Parâmetros Analisados:
+> humor: 1
+> horasSono: 20.0
+> nivelEstresse: 5
+> atividadeFisica: 0
+> interacaoSocial: 1
+---------------------------------------------
