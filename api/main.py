@@ -184,7 +184,7 @@ def predict_risk(data: PredictionInput):
         nlp_probs = nlp_pipeline.predict_proba([data.text])[0]
         prob_high_risk_nlp = float(nlp_probs[1])
         
-        # 2. Análise Quantitativa (Check-in via Predictive Pipeline)
+        # 2. Análise Quantitativa
         prob_high_risk_quant = None
         has_quant_data = all(v is not None for v in [data.humor, data.horasSono, data.nivelEstresse, data.atividadeFisica, data.interacaoSocial])
         
@@ -201,7 +201,7 @@ def predict_risk(data: PredictionInput):
         
         # 3. Avaliação Conjunta e Direcionamento por Tipo
         if data.tipo == "checkin" and prob_high_risk_quant is not None:
-            # Se for checkin, ignora o texto padrão enviado e confia 100% nos números
+            # Se for checkin, ignora o texto padrão enviado
             prob_high_risk = prob_high_risk_quant
         elif prob_high_risk_quant is not None:
             # Se não for só checkin mas tiver os dados quantitativos, faz a ponderação
@@ -212,7 +212,7 @@ def predict_risk(data: PredictionInput):
         prob_low_risk = 1.0 - prob_high_risk
         is_high_risk = prob_high_risk > 0.5
         
-        # 4. Extração de Marcadores Clínicos (Salvaguarda - apenas para diários reais)
+        # 4. Extração de Marcadores Clínicos
         if data.tipo == "checkin":
             marcadores_detectados = []
             has_critical = False

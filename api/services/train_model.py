@@ -96,9 +96,9 @@ def train_and_save_models():
         ))
     ])
     nlp_pipeline.fit(X_train_t, y_train_t)
-    print(f"[PLN] Acurácia NLP (Texto): {nlp_pipeline.score(X_test_t, y_test_t) * 100:.2f}%")
+    print(f"curácia NLP (Texto): {nlp_pipeline.score(X_test_t, y_test_t) * 100:.2f}%")
     
-    print("[ML] Treinando o Predictive Pipeline (Métricas Quantitativas - Random Forest)...")
+    print("Treinando o Predictive Pipeline (Métricas Quantitativas - Random Forest)...")
     FEATURES = ['humor', 'horasSono', 'nivelEstresse', 'atividadeFisica', 'interacaoSocial']
     X_quant = df[FEATURES]
     
